@@ -1,0 +1,30 @@
+{
+  "Navigation": {
+    "title": "日历",
+    "month": "按月",
+    "day": "按日"
+  },
+  "LocaleSwitcher": {
+    "label": "语言"
+  },
+  "MonthPage": {
+    "title": "月视图",
+    "lead": "选择一个月份以预览即将到来的日程占位内容。",
+    "cta": "选择月份",
+    "selected": "当前查看 {value}",
+    "placeholderHeading": "示例亮点",
+    "exampleOne": "需要协调的周期会议",
+    "exampleTwo": "来自工作区的节假日同步",
+    "exampleThree": "个人提醒与专注时间"
+  },
+  "DayPage": {
+    "title": "日视图",
+    "lead": "选择某一天以查看示例日程安排。",
+    "cta": "选择日期",
+    "selected": "当前查看 {value}",
+    "placeholderHeading": "示例日程",
+    "exampleOne": "上午专注时段",
+    "exampleTwo": "团队站会与同步",
+    "exampleThree": "收尾笔记与后续安排"
+  }
+}
