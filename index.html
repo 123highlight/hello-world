@@ -18,9 +18,9 @@
             --font-cn: "ZCOOL KuaiLe", sans-serif;
             --font-en: "Nunito", sans-serif;
             --primary: #5d6d7e;
-            --accent: #e67e22;
+            --accent: #d35400;
             --glass: rgba(255, 255, 255, 0.9);
-            --shadow: 0 8px 20px rgba(0,0,0,0.06);
+            --shadow: 0 4px 15px rgba(0,0,0,0.05);
             --tab-height: 60px;
             
             /* 四化色 */
@@ -40,7 +40,6 @@
             color: #333;
         }
 
-        /* === 顶部 === */
         .app-header {
             position: fixed; top: 0; left: 0; width: 100%; height: 50px;
             display: flex; align-items: center; padding: 0 20px; 
@@ -50,7 +49,6 @@
         }
         .logo { font-size: 1.4rem; color: var(--primary); font-weight: bold; letter-spacing: 1px; }
 
-        /* === 主视口 === */
         .main-viewport {
             height: 100%; width: 100%;
             padding-top: calc(50px + env(safe-area-inset-top));
@@ -59,99 +57,85 @@
             scroll-behavior: smooth;
         }
 
-        .view-section { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
+        .view-section { display: none; padding: 15px; animation: fadeIn 0.3s ease; }
         .view-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* === 卡片通用 === */
-        .card { 
-            background: var(--glass); border-radius: 16px; padding: 20px; 
-            margin-bottom: 20px; box-shadow: var(--shadow); 
-            border: 1px solid rgba(255,255,255,0.5);
-        }
-        .card h3 { 
-            margin: 0 0 15px 0; font-size: 1rem; color: #888; 
-            text-transform: uppercase; display: flex; align-items: center; gap: 8px; 
-            border-bottom: 1px dashed #eee; padding-bottom: 8px;
-        }
-        .card h3 i { color: var(--primary); }
-
-        /* === 日历视图 === */
+        /* 日历 */
         .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #fff; padding: 10px; border-radius: 12px; box-shadow: var(--shadow); }
         .cal-title { font-size: 1.2rem; font-weight: bold; color: var(--primary); }
         .btn-nav { width: 32px; height: 32px; border-radius: 50%; border: none; background: #f0f0f0; color: #555; font-size: 1rem; }
 
-        .weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; margin-bottom: 10px; font-size: 0.9rem; color: #888; }
-        .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+        .weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; margin-bottom: 5px; font-size: 0.9rem; color: #888; }
+        .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
         
         .day-cell {
-            background: #fff; border-radius: 10px; aspect-ratio: 1;
+            background: #fff; border-radius: 8px; aspect-ratio: 1;
             display: flex; flex-direction: column; justify-content: flex-start; align-items: center;
             position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.02); padding-top: 4px;
         }
         .day-cell.active { background: var(--primary); color: #fff; box-shadow: 0 4px 10px rgba(93, 109, 126, 0.4); border: 1px solid var(--primary); z-index: 2;}
-        .day-cell.active .lunar-num, .day-cell.active .holiday { color: #fff !important; }
+        .day-cell.active .lunar-num, .day-cell.active .holiday, .day-cell.active .tag-chu { color: #fff !important; }
         
         .g-num { font-size: 1.1rem; font-weight: bold; line-height: 1.2; }
         .lunar-num { font-size: 0.6rem; color: #999; line-height: 1.2; }
-        .holiday { font-size: 0.6rem; color: #c0392b; font-weight: bold; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 90%; text-align: center;}
-        .tag-chu { position: absolute; bottom: 3px; right: 3px; font-size: 0.5rem; background: #e74c3c; color: #fff; padding: 1px 3px; border-radius: 3px; }
+        .holiday { font-size: 0.6rem; color: #c0392b; font-weight: bold; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 95%; text-align: center;}
+        .tag-chu { position: absolute; bottom: 2px; right: 2px; font-size: 0.5rem; background: #e74c3c; color: #fff; padding: 0 3px; border-radius: 3px; }
 
-        .astro-item { display: flex; gap: 10px; margin-bottom: 8px; font-size: 0.9rem; align-items: center; border-bottom: 1px dashed rgba(0,0,0,0.05); padding-bottom: 4px;}
-        .astro-date { font-weight: bold; color: var(--primary); background: rgba(255,255,255,0.5); padding: 1px 6px; border-radius: 4px; min-width: 45px; text-align: center;}
+        .astro-box { background: #fff; padding: 15px; border-radius: 12px; margin-top: 20px; box-shadow: var(--shadow); }
+        .astro-title { font-size: 1rem; font-weight: bold; color: var(--primary); margin-bottom: 10px; border-bottom: 1px dashed #eee; padding-bottom: 5px; }
+        .astro-item { display: flex; gap: 10px; margin-bottom: 8px; font-size: 0.85rem; align-items: flex-start; border-bottom: 1px dashed #f5f5f5; padding-bottom: 5px;}
+        .astro-date { font-weight: bold; color: var(--accent); min-width: 85px; flex-shrink: 0; }
 
-        /* === 今日视图 === */
+        /* 今日 */
         .big-date-box { text-align: center; margin-bottom: 20px; padding: 10px 0; }
-        .bd-num { font-size: 5rem; line-height: 1; color: var(--primary); font-weight: bold; letter-spacing: -2px;}
-        .bd-lunar { font-size: 1.2rem; margin-top: 5px; color: #555; }
-        .bd-gz { background: #fff; padding: 4px 12px; border-radius: 15px; display: inline-block; margin-top: 10px; font-size: 0.95rem; color: #888; border: 1px solid #eee; }
+        .bd-num { font-size: 4rem; line-height: 1; color: var(--primary); font-weight: bold; }
+        .bd-lunar { font-size: 1.1rem; margin-top: 5px; color: #555; }
+        .bd-gz { background: #fff; padding: 4px 12px; border-radius: 15px; display: inline-block; margin-top: 8px; font-size: 0.9rem; color: #888; border: 1px solid #eee; }
 
-        /* 宜忌 */
-        .yiji-row { display: flex; margin-bottom: 8px; font-size: 1rem; line-height: 1.5; align-items: flex-start;}
-        .badge { padding: 2px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; margin-right: 10px; height: fit-content; white-space: nowrap; }
+        .card { background: var(--glass); border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: var(--shadow); }
+        .card h3 { margin: 0 0 10px 0; font-size: 0.95rem; color: #999; text-transform: uppercase; display: flex; align-items: center; gap: 6px; border-bottom: 1px dashed #eee; padding-bottom: 8px; }
+        .card h3 i { color: var(--primary); }
+
+        .yiji-row { display: flex; margin-bottom: 6px; font-size: 0.95rem; line-height: 1.4; align-items: flex-start;}
+        .badge { padding: 1px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-right: 8px; height: fit-content; white-space: nowrap; }
         .bg-yi { background: #e8f5e9; color: #27ae60; }
         .bg-ji { background: #ffebee; color: #c0392b; }
-        
-        /* 能量信息 */
-        .info-grid { display: grid; grid-template-columns: 1fr; gap: 8px; font-size: 0.95rem; color: #555; }
-        .info-item { display: flex; justify-content: space-between; border-bottom: 1px dashed #f0f0f0; padding-bottom: 5px;}
-        .info-item b { color: #444; }
+        .jianchu-info { font-size: 0.9rem; color: #555; margin-top: 8px; display: flex; gap: 10px;}
 
-        /* Tips */
-        .tips-box { font-size: 1.05rem; color: #444; line-height: 1.6; font-weight: bold; color: var(--primary);}
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.9rem; color: #555; }
+        .info-item b { color: #333; margin-right: 5px; }
 
-        /* 日记 */
+        /* Tips 样式优化 */
+        .tips-box { font-size: 1rem; color: #444; line-height: 1.6; }
+        .tips-hl { color: var(--accent); font-weight: bold; display: block; margin-bottom: 5px;}
+        .tips-content { display: block; text-align: justify; }
+
         .journal-area { background: #fff; border-radius: 12px; padding: 15px; border: 1px solid #eee; }
-        #journalInput { width: 100%; height: 100px; border: none; outline: none; resize: none; font-size: 1rem; line-height: 1.6; background: transparent; font-family: var(--font-cn); }
+        #journalInput { width: 100%; height: 120px; border: none; outline: none; resize: none; font-size: 1rem; line-height: 1.6; background: transparent; font-family: var(--font-cn); }
 
-        /* === 玄学页 (有点玄) === */
-        .star-list-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0; font-size: 1rem; }
-        .star-tag { font-weight: bold; font-size: 1.1rem; }
+        /* 有点玄 */
+        .sihua-grid { display: grid; grid-template-columns: 50px 1fr 1fr 1fr 1fr; gap: 5px; text-align: center; font-size: 0.95rem; }
+        .sh-cell { padding: 4px 0; }
+        .sh-head { font-weight: bold; color: #999; font-size: 0.8rem; }
+        .sh-label { font-weight: bold; color: var(--primary); text-align: left;}
+        .star-txt { font-weight: bold; }
+        .c-lu { color: var(--c-lu); } .c-quan { color: var(--c-quan); } .c-ke { color: var(--c-ke); } .c-ji { color: var(--c-ji); }
 
-        /* 四化列表 */
-        .sihua-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
-        .sihua-table td { padding: 8px 4px; text-align: center; border-bottom: 1px dashed #eee; }
-        .sh-label { font-weight: bold; text-align: left; color: #666; }
-        .c-lu { color: var(--c-lu); font-weight: bold;} 
-        .c-quan { color: var(--c-quan); font-weight: bold;} 
-        .c-ke { color: var(--c-ke); font-weight: bold;} 
-        .c-ji { color: var(--c-ji); font-weight: bold;}
+        .star-list-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 0.95rem; }
+        .star-tag { font-weight: bold; font-size: 1rem; }
+        
+        .export-btn { width: 100%; padding: 15px; border: none; border-radius: 12px; background: #fff; color: var(--primary); font-size: 1rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
-        /* 底部 Tab */
-        .tab-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: calc(var(--tab-height) + env(safe-area-inset-bottom));
-            background: #fff; border-top: 1px solid #eee; display: flex; justify-content: space-around; padding-top: 8px; z-index: 99;
-        }
-        .tab-item { display: flex; flex-direction: column; align-items: center; color: #ccc; font-size: 0.7rem; transition: 0.2s;}
+        .tab-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: calc(var(--tab-height) + env(safe-area-inset-bottom)); background: #fff; border-top: 1px solid #eee; display: flex; justify-content: space-around; padding-top: 8px; z-index: 99; }
+        .tab-item { display: flex; flex-direction: column; align-items: center; color: #ccc; font-size: 0.7rem; transition: 0.2s; }
         .tab-item i { font-size: 1.4rem; margin-bottom: 2px; }
-        .tab-item.active { color: var(--primary); transform: translateY(-2px); }
+        .tab-item.active { color: var(--primary); }
 
         ::-webkit-scrollbar { width: 0px; background: transparent; }
 
         @media (max-width: 900px) {
             .app-container { flex-direction: column; height: auto; width: 100%; border-radius: 0; }
-            .glass-panel { flex-direction: column; height: auto; border-radius: 0; border: none; }
-            .left-panel, .right-panel { width: 100%; padding: 20px; overflow: visible; flex-direction: column; }
         }
     </style>
 </head>
@@ -172,13 +156,13 @@
             <div class="weekdays"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
             <div class="days-grid" id="calendarGrid"></div>
             
-            <div class="card" style="margin-top: 20px;">
-                <h3><i class="fas fa-star"></i> 本月重要天象</h3>
+            <div class="astro-box">
+                <div class="astro-title"><i class="fas fa-star"></i> 本月重要天象</div>
                 <div id="astroList"></div>
             </div>
         </div>
 
-        <!-- 视图2：今日 (极简) -->
+        <!-- 视图2：今日 -->
         <div id="view-today" class="view-section">
             <div class="big-date-box">
                 <div class="bd-num" id="todayDay">--</div>
@@ -194,14 +178,17 @@
                 <div class="yiji-row">
                     <span class="badge bg-ji">忌</span> <span id="todayJi"></span>
                 </div>
+                <div class="jianchu-info">
+                    <span>建除：<b id="todayJianChu" style="color:var(--accent)"></b></span>
+                                </div>
             </div>
 
             <div class="card">
                 <h3><i class="fas fa-bolt"></i> 能量方位</h3>
                 <div class="info-grid">
                     <div class="info-item"><span>财神</span> <b id="godCai"></b></div>
-                    <div class="info-item"><span>喜神 (姻缘)</span> <b id="godXi"></b></div>
-                    <div class="info-item"><span>福神 (贵人)</span> <b id="godFu"></b></div>
+                    <div class="info-item"><span>喜神</span> <b id="godXi"></b></div>
+                    <div class="info-item"><span>福神</span> <b id="godFu"></b></div>
                     <div class="info-item"><span>冲煞</span> <b id="chongSha"></b></div>
                 </div>
             </div>
@@ -214,27 +201,37 @@
             <div class="card">
                 <h3><i class="fas fa-pen"></i> 心情随记</h3>
                 <div class="journal-area">
-                    <textarea id="journalInput" placeholder="写下今天的感受... (自动保存)"></textarea>
+                    <textarea id="journalInput" placeholder="记录当下的想法... (自动保存)"></textarea>
                 </div>
             </div>
         </div>
 
-        <!-- 视图3：有点玄 (玄学数据) -->
+        <!-- 视图3：有点玄 -->
         <div id="view-pro" class="view-section">
             <h2 style="margin-bottom:20px; color:var(--primary);">有点玄</h2>
             
             <div class="card">
                 <h3><i class="fas fa-th"></i> 九宫飞星</h3>
-                <div id="fsList">
-                    <!-- JS 填充 -->
-                </div>
+                <div id="fsList"></div>
             </div>
 
             <div class="card">
                 <h3><i class="fas fa-bahai"></i> 紫微四化</h3>
-                <table class="sihua-table" id="sihuaTable">
-                    <!-- JS 填充 -->
-                </table>
+                <div class="sihua-grid">
+                    <div class="sh-cell"></div>
+                    <div class="sh-cell sh-head" style="color:var(--c-lu)">● 禄</div>
+                    <div class="sh-cell sh-head" style="color:var(--c-quan)">● 权</div>
+                    <div class="sh-cell sh-head" style="color:var(--c-ke)">● 科</div>
+                    <div class="sh-cell sh-head" style="color:var(--c-ji)">● 忌</div>
+                    <div style="display:contents" id="sihuaContent"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-database"></i> 数据管理</h3>
+                <button class="export-btn" onclick="exportJournal()">
+                    <i class="fas fa-file-export"></i> 导出我的日记 (TXT)
+                </button>
             </div>
         </div>
 
@@ -253,51 +250,92 @@
     </nav>
 
     <script>
-        // === 全局变量 ===
         let currentDate = new Date();
         let selectedDate = new Date();
         const monthNames = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
         
-        // === 星象库 (2025-2027) ===
+        // === 2025-2028 星象库 (User Data) ===
         const AstroDB = {
-            "2025-10": [{d:24,t:"太阳进天蝎"}],
-            "2025-11": [{d:9,t:"水逆开始"},{d:20,t:"冥王进水瓶"},{d:27,t:"土星顺行"},{d:29,t:"水星顺行"}],
-            "2025-12": [{d:21,t:"冬至"}],
-            "2026-1": [{d:20,t:"太阳进水瓶"}],
-            "2026-2": [{d:14,t:"土星进白羊"},{d:17,t:"日环食"},{d:26,t:"水逆开始"}],
-            "2026-4": [{d:26,t:"海王进白羊"}],
-            "2026-6": [{d:9,t:"木星进巨蟹"},{d:29,t:"水逆开始"}],
-            "2026-7": [{d:7,t:"天王进双子"}],
-            "2026-8": [{d:12,t:"日全食"}],
-            "2026-10": [{d:3,t:"金星逆行"},{d:24,t:"水逆开始"}],
-            "2027-1": [{d:2,t:"火星逆行"}],
-            "2027-2": [{d:6,t:"日环食"},{d:20,t:"水逆开始"}],
-            "default": [{d:22,t:"太阳换座"}]
+            "2025-2": [{d:24,t:"金星逆行开始"}], 
+            "2025-3": [{d:14,t:"月全食(双鱼)"},{d:15,t:"水逆开始"},{d:29,t:"日全食(处女)"},{d:30,t:"海王星进白羊"}],
+            "2025-4": [{d:7,t:"水星顺行"},{d:13,t:"金星顺行"}],
+            "2025-5": [{d:4,t:"冥王星逆行开始"},{d:25,t:"土星进白羊"}],
+            "2025-6": [{d:10,t:"木星进巨蟹"}],
+            "2025-7": [{d:4,t:"海王星逆行开始"},{d:7,t:"天王星进双子"},{d:13,t:"土星逆行开始"},{d:18,t:"水逆开始"}],
+            "2025-8": [{d:11,t:"水星顺行"},{d:30,t:"天王星逆行开始"}],
+            "2025-9": [{d:1,t:"土星逆回双鱼"},{d:7,t:"日偏食(双鱼)"},{d:21,t:"月偏食(摩羯)"}],
+            "2025-10": [{d:9,t:"木星逆行开始"},{d:14,t:"冥王星顺行"}],
+            "2025-11": [{d:9,t:"水逆开始"},{d:28,t:"土星顺行"},{d:29,t:"水星顺行"}],
+
+            "2026-1": [{d:29,t:"天王星顺行"}],
+            "2026-2": [{d:4,t:"木星顺行"},{d:17,t:"日环食(水瓶)"},{d:26,t:"水逆开始"}],
+            "2026-3": [{d:3,t:"月全食(狮子)"},{d:20,t:"水星顺行"}],
+            "2026-5": [{d:6,t:"冥王星逆行开始"}],
+            "2026-6": [{d:20,t:"木星进狮子"},{d:29,t:"水逆开始"}],
+            "2026-7": [{d:6,t:"海王星逆行开始"},{d:23,t:"水星顺行"},{d:26,t:"土星逆行开始"}],
+            "2026-8": [{d:12,t:"日全食(狮子)"},{d:28,t:"月偏食(水瓶)"}],
+            "2026-9": [{d:2,t:"土星逆回双鱼"},{d:4,t:"天王星逆行开始"}],
+            "2026-10": [{d:16,t:"冥王星顺行"},{d:24,t:"水逆开始"}],
+            "2026-11": [{d:8,t:"天王星逆回金牛"},{d:13,t:"水星顺行"}],
+            "2026-12": [{d:11,t:"土星顺行"},{d:12,t:"海王星顺行"}],
+
+            "2027-2": [{d:3,t:"天王星顺行"},{d:6,t:"日环食(水瓶)"},{d:9,t:"水逆开始"},{d:20,t:"月偏食(处女)"},{d:20,t:"火星逆行开始"}],
+            "2027-3": [{d:3,t:"水星顺行"},{d:8,t:"月偏食(双鱼)"},{d:23,t:"木星逆行开始"}],
+            "2027-4": [{d:26,t:"天王星顺行进双子"}],
+            "2027-5": [{d:8,t:"冥王星逆行开始"},{d:11,t:"火星顺行"}],
+            "2027-6": [{d:10,t:"水逆开始"}],
+            "2027-7": [{d:4,t:"水星顺行"},{d:8,t:"海王星逆行开始"},{d:13,t:"木星进处女"},{d:26,t:"木星顺行"}],
+            "2027-8": [{d:2,t:"日全食(狮子)"},{d:9,t:"土星逆行开始"},{d:17,t:"月全食(双鱼)"}],
+            "2027-9": [{d:9,t:"天王星逆行开始"}],
+            "2027-10": [{d:7,t:"水逆开始"},{d:18,t:"冥王星顺行"},{d:28,t:"水星顺行"}],
+            "2027-12": [{d:14,t:"海王星顺行"},{d:24,t:"土星顺行"}],
+
+            "2028-1": [{d:1,t:"冥王/火星进水瓶"},{d:12,t:"月偏食(巨蟹)/木星逆行开始"},{d:24,t:"水逆开始"},{d:26,t:"日环食(水瓶)"}],
+            "2028-2": [{d:8,t:"天王星顺行"},{d:14,t:"水星顺行"}],
+            "2028-5": [{d:1,t:"冥王星逆行"},{d:14,t:"木星顺行"},{d:21,t:"水逆开始"}],
+            "2028-6": [{d:14,t:"水星顺行"}],
+            "2028-7": [{d:1,t:"海王星逆行"},{d:6,t:"月偏食(摩羯)"},{d:22,t:"日全食(巨蟹)"}],
+            "2028-8": [{d:1,t:"木星进天秤"},{d:23,t:"土星逆行开始"}],
+            "2028-9": [{d:19,t:"水逆开始"}],
+            "2028-10": [{d:11,t:"水星顺行"}],
+            "2028-12": [{d:31,t:"月全食(巨蟹)"}]
         };
-        
-        // 现代宜忌白名单
+
+        // 十天干四化与社会趋势解读
+        const SiHuaTips = {
+            "甲": "廉贞化禄 (机遇)、破军化权 (权力)、武曲化科 (声望)、太阳化忌 (问题)。<br>趋势：旧秩序变革，关注法律与政治新机会。大刀阔斧的改革掌权。需警惕男性领袖或公信力受损。",
+            "乙": "天机化禄、天梁化权、紫微化科、太阴化忌。<br>趋势：智慧博弈，利于策划科技与慈善监管。女性领袖或民生房产领域可能出现焦虑或动荡。",
+            "丙": "天同化禄、天机化权、文昌化科、廉贞化忌。<br>趋势：享乐服务业兴盛，利于文化签约。需警惕法律纠纷、秩序混乱及情感纠纷。",
+            "丁": "太阴化禄、天同化权、天机化科、巨门化忌。<br>趋势：民生消费与女性产业利好。需警惕口舌是非、网络谣言及暗处的问题爆发。",
+            "戊": "贪狼化禄、太阴化权、右弼化科、天机化忌。<br>趋势：欲望扩张，投机娱乐活跃。需警惕计划赶不上变化，交通通讯或科技发展受阻。",
+            "己": "武曲化禄、贪狼化权、天梁化科、文曲化忌。<br>趋势：务实求财，商业竞争激烈。需警惕文书合约出错，避免非理性的情感泛滥。",
+            "庚": "太阳化禄、武曲化权、太阴化科、天同化忌。<br>趋势：权威与实业力量加强，利于公用事业。需警惕福气受损，社会情绪容易低落躺平。",
+            "辛": "巨门化禄、太阳化权、文曲化科、文昌化忌。<br>趋势：利于口才与咨询业，权威强化。需警惕重大合约、法律文件或制度规则出现漏洞。",
+            "壬": "天梁化禄、紫微化权、左辅化科、武曲化忌。<br>趋势：利于医疗慈善与传统文化，领导权力达顶峰。需警惕金融波动，财星受损，慎重理财。",
+            "癸": "破军化禄、巨门化权、太阴化科、贪狼化忌。<br>趋势：破旧立新，颠覆性创新为主。需警惕投机泡沫破裂，理想主义幻灭。"
+        };
+
         const ModernEvents = ["出行","纳财","入宅","嫁娶","交易","会友","签约","装修","搬家","祈福","开市","动土","置产","安床","理发","求医"];
         
-        // 背景图配置
         const bgImages = [
-            "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=80&w=1000", 
-            "https://images.unsplash.com/photo-1507643179173-39db2965446c?q=80&w=1000", 
+            "https://images.unsplash.com/photo-1549887534-1541e9326642?q=80&w=1000", 
+            "https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=1000", 
+            "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?q=80&w=1000", 
+            "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?q=80&w=1000", 
+            "https://images.unsplash.com/photo-1547891654-e66ed7ebb968?q=80&w=1000", 
+            "https://images.unsplash.com/photo-1549490349-8643362247b5?q=80&w=1000", 
             "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1000", 
-            "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=1000", 
-            "https://images.unsplash.com/photo-1530982011887-3cc11cc85693?q=80&w=1000", 
-            "https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?q=80&w=1000", 
-            "https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=1000", 
-            "https://images.unsplash.com/photo-1506259091721-347f798196d4?q=80&w=1000", 
+            "https://images.unsplash.com/photo-1578320339912-5893539047ae?q=80&w=1000", 
             "https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=1000", 
-            "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1000", 
-            "https://images.unsplash.com/photo-1483232539664-d89d58f8f159?q=80&w=1000", 
-            "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?q=80&w=1000"
+            "https://images.unsplash.com/photo-1507646227500-4d389b0012be?q=80&w=1000", 
+            "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1000", 
+            "https://images.unsplash.com/photo-1604147706283-d7119b5b7636?q=80&w=1000"
         ];
-        const seasonColors = ["#95a5a6", "#d2b4de", "#a9dfbf", "#a3e4d7", "#f5cba7", "#aed6f1", "#f1948a", "#edbb99", "#d7bde2", "#abb2b9", "#566573", "#808b96"];
+        const seasonColors = ["#8d99ae", "#ffb7b2", "#a8e6cf", "#95d5b2", "#ff9f1c", "#48cae4", "#ff6b6b", "#e07a5f", "#d4a373", "#457b9d", "#d62828", "#bc4749"];
 
         // === 初始化 ===
         window.onload = function() {
-            if(typeof Lunar === 'undefined') { alert("组件加载失败，请刷新"); return; }
+            if(typeof Lunar === 'undefined') { alert("核心组件加载失败，请检查网络"); return; }
             renderHome();
             document.getElementById('journalInput').addEventListener('input', function(){
                 localStorage.setItem('panna_j_'+getDateKey(selectedDate), this.value);
@@ -312,16 +350,10 @@
         }
 
         function renderHome() {
-            const m = currentDate.getMonth();
-            document.body.style.backgroundImage = `url('${bgImages[m]}')`;
-            document.documentElement.style.setProperty('--season-accent', seasonColors[m]);
-            
+            updateTheme();
             renderCalendar();
             updateDetails(selectedDate);
-            
-            const k = `${currentDate.getFullYear()}-${currentDate.getMonth()+1}`;
-            const events = AstroDB[k] || AstroDB["default"];
-            document.getElementById('astroList').innerHTML = events.map(e => `<div class="astro-item"><span class="astro-date">${e.d}日</span><span>${e.t}</span></div>`).join('');
+            renderAstroEvents();
         }
 
         function changeMonth(n) {
@@ -329,10 +361,17 @@
             renderHome();
         }
 
+        function updateTheme() {
+            const m = currentDate.getMonth();
+            document.body.style.backgroundImage = `url('${bgImages[m]}')`;
+            document.documentElement.style.setProperty('--season-accent', seasonColors[m]);
+        }
+
         function renderCalendar() {
             const y = currentDate.getFullYear();
             const m = currentDate.getMonth();
             document.querySelector('.cal-title').innerText = `${y}年 ${m+1}月`;
+            
             const grid = document.getElementById('calendarGrid');
             grid.innerHTML = '';
             
@@ -347,7 +386,7 @@
                 const isSel = d.toDateString() === selectedDate.toDateString();
                 
                 let txt = l.getDayInChinese();
-                let style = "";
+                let cls = "";
                 let tag = "";
 
                 const fs = l.getFestivals();
@@ -355,20 +394,18 @@
                 const major = ["春节","元宵节","端午节","七夕节","中秋节","重阳节","除夕","国庆节","劳动节","元旦"];
                 
                 if(fs.length && major.includes(fs[0])) { 
-                    tag = `<div class="holiday">${fs[0]}</div>`; 
-                    txt = ""; 
+                    tag = `<div class="holiday">${fs[0]}</div>`; txt = ""; 
                 } else if (jq) {
-                    tag = `<div class="holiday" style="color:#d35400">${jq}</div>`;
-                    txt = "";
+                    tag = `<div class="holiday" style="color:#d35400">${jq}</div>`; txt = "";
                 } else if(txt==='初一'||txt==='十五') {
-                    style = "color:#d35400;font-weight:bold";
+                    cls = "gold";
                 }
                 
                 if(l.getZhiXing() === '除') tag += `<div class="tag-chu">除</div>`;
 
                 const div = document.createElement('div');
                 div.className = `day-cell ${isSel?'active':''}`;
-                div.innerHTML = `<span class="g-num">${i}</span><span class="lunar-num" style="${style}">${txt}</span>${tag}`;
+                div.innerHTML = `<span class="g-num">${i}</span><span class="lunar-num ${cls}">${txt}</span>${tag}`;
                 div.onclick = () => { 
                     selectedDate = d; renderCalendar(); updateDetails(d); 
                     switchTab('view-today', document.querySelectorAll('.tab-item')[1]); 
@@ -378,84 +415,126 @@
         }
 
         function updateDetails(date) {
-            const l = Lunar.fromDate(date);
-            
-            document.getElementById('todayDay').innerText = date.getDate();
-            document.getElementById('todayLunar').innerText = `农历 ${l.getMonthInChinese()}月${l.getDayInChinese()}`;
-            document.getElementById('todayGanZhi').innerText = `${l.getYearInGanZhi()}年 ${l.getMonthInGanZhi()}月 ${l.getDayInGanZhi()}日`;
+            try {
+                const l = Lunar.fromDate(date);
+                
+                document.getElementById('todayDay').innerText = date.getDate();
+                document.getElementById('todayLunar').innerText = `农历 ${l.getMonthInChinese()}月${l.getDayInChinese()}`;
+                document.getElementById('todayGanZhi').innerText = `${l.getYearInGanZhi()}年 ${l.getMonthInGanZhi()}月 ${l.getDayInGanZhi()}日`;
 
-            // 宜忌
-            const yi = l.getDayYi().filter(x=>ModernEvents.includes(x));
-            const ji = l.getDayJi().filter(x=>ModernEvents.includes(x));
-            document.getElementById('todayYi').innerText = yi.length ? yi.join(' ') : "平";
-            document.getElementById('todayJi').innerText = ji.length ? ji.join(' ') : "平";
-            
-            // 吉方 (白话)
-            document.getElementById('godCai').innerText = mapDir(l.getDayPositionCai());
-            document.getElementById('godXi').innerText = mapDir(l.getDayPositionXi());
-            document.getElementById('godFu').innerText = mapDir(l.getDayPositionFu());
-            document.getElementById('chongSha').innerText = `冲${l.getDayChongDesc()} 煞${mapDir(l.getDaySha())}`;
+                const yi = l.getDayYi().filter(x=>ModernEvents.includes(x));
+                const ji = l.getDayJi().filter(x=>ModernEvents.includes(x));
+                document.getElementById('todayYi').innerText = yi.length ? yi.join(' ') : "平";
+                document.getElementById('todayJi').innerText = ji.length ? ji.join(' ') : "平";
+                
+                document.getElementById('todayJianChu').innerText = l.getZhiXing();
+                document.getElementById('godCai').innerText = mapDir(l.getDayPositionCai());
+                document.getElementById('godXi').innerText = mapDir(l.getDayPositionXi());
+                document.getElementById('godFu').innerText = mapDir(l.getDayPositionFu());
+                document.getElementById('chongSha').innerText = `冲${l.getDayChongDesc()} 煞${mapDir(l.getDaySha())}`;
 
-            // Tips (智能生成)
-            let tip = "🌈 保持平和，享受当下的每一个瞬间。";
-            const yg = l.getYearGan();
+                // === 智能 Tips 生成逻辑 ===
+                let tip = "";
+                const fs = l.getFestivals();
+                const k = `${date.getFullYear()}-${date.getMonth()+1}`;
+                
+                // 1. 节日祝福 (Priority 1)
+                if(fs.length) {
+                    const f = fs[0];
+                    if(f==="春节") tip = "🧨 春节快乐！愿新的一年万事顺遂，平安喜乐。";
+                    else if(f==="元宵节") tip = "🏮 元宵快乐！愿生活圆满，前途明亮。";
+                    else if(f==="端午节") tip = "🐲 端午安康！愿您百毒不侵，诸邪退散。";
+                    else if(f==="中秋节") tip = "🥮 中秋快乐！愿花好月圆，人月两团圆。";
+                    else if(f==="除夕") tip = "🧧 辞旧迎新，愿您扫除烦恼，迎接美好。";
+                    else tip = `🎉 今天是${f}，祝您节日快乐！`;
+                }
+
+                // 2. 星象提示 (Priority 2)
+                if(!tip && AstroDB[k]) {
+                    // 查找当天是否有星象
+                    const dayNum = date.getDate();
+                    const evt = AstroDB[k].find(e => {
+                        if(typeof e.d === 'number') return e.d === dayNum;
+                        if(typeof e.d === 'string') return parseInt(e.d) === dayNum; // 简单匹配开始日
+                        return false;
+                    });
+
+                    if(evt) {
+                        const t = evt.t;
+                        if(t.includes("进入")) tip = `🌌 ${t}：行星转换跑道，开启新的能量课题。`;
+                        else if(t.includes("逆行")) tip = `💫 ${t}：反思、回顾与修正的时期，放慢脚步。`;
+                        else if(t.includes("食")) tip = `🌑 ${t}：能量强大的转折点，命运的齿轮开始转动。`;
+                        else if(t.includes("顺行")) tip = `✅ ${t}：阻碍消散，能量恢复顺畅，适宜推进计划。`;
+                        else tip = `💡 星象提示：${t}`;
+                    }
+                }
+
+                // 3. 流月四化 (Priority 3 - 初一显示)
+                if(!tip && l.getDay() === 1) {
+                    const mg = l.getMonthGan();
+                    if(SiHuaTips[mg]) {
+                        tip = `<span class="tips-hl">📅 本月社会趋势 (${mg}干)：</span>${SiHuaTips[mg]}`;
+                    }
+                }
+
+                // 4. 默认兜底
+                if(!tip) {
+                    if(l.getZhiXing() === '除') tip = "🧹 除日：适合大扫除，清理身心负荷。";
+                    else tip = "🌈 保持平和心态，专注当下，美好自会发生。";
+                }
+
+                document.getElementById('todayAdvice').innerHTML = `<span class="tips-content">${tip}</span>`;
+
+                renderProView(l);
+                document.getElementById('journalInput').value = localStorage.getItem('panna_j_'+getDateKey(date)) || "";
+            } catch(e) { console.error(e); }
+        }
+
+        function renderAstroEvents() {
+            const k = `${currentDate.getFullYear()}-${currentDate.getMonth()+1}`;
+            let events = AstroDB[k] || [];
+            const el = document.getElementById('astroList');
             
-            // 优先星象
-            const k = `${date.getFullYear()}-${date.getMonth()+1}`;
-            if(AstroDB[k]) {
-                const evt = AstroDB[k].find(e=>e.d===date.getDate());
-                if(evt) tip = `💡 星象提示：${evt.t}，请顺应能量变化。`;
-                else if(AstroDB[k].some(e=>e.t.includes("水逆开始"))) tip = "🌊 水星逆行期间，请多做内省，谨慎沟通。";
+            if(events.length > 0) {
+                events.sort((a,b) => parseInt(a.d) - parseInt(b.d));
+                el.innerHTML = events.map(e => 
+                    `<div class="astro-item"><span class="astro-date">${typeof e.d === 'string' ? e.d.replace('-', '日-')+'日' : e.d+'日'}</span><span>${e.t}</span></div>`
+                ).join('');
+            } else {
+                el.innerHTML = "<div style='text-align:center;color:#999;padding:10px;'>本月星象平稳，适宜沉淀。</div>";
             }
-            // 其次节气/节日
-            const fs = l.getFestivals();
-            const jq = l.getJieQi();
-            if(fs.length) tip = `🎉 今天是${fs[0]}，祝您节日快乐！`;
-            else if(jq) tip = `🌱 今日${jq}，顺应天时，调整身心。`;
-            
-            // 再次四化/飞星
-            else {
-                 if(yg === "甲") tip = "💰 廉贞化禄，利于社交与创新，保持开放心态。";
-                 if(yg === "丁") tip = "🌙 太阴化禄，财运不错，也适合关注家庭。";
-                 if(l.getDay()===1) tip = "🌑 新月日，适合许下本月心愿。";
-                 if(l.getZhiXing()==='除') tip = "🧹 除日，适合大扫除，清理负能量。";
-            }
-            
-            document.getElementById('todayAdvice').innerText = tip;
-
-            // 刷新第三页数据
-            renderProView(l);
-
-            document.getElementById('journalInput').value = localStorage.getItem('panna_j_'+getDateKey(date)) || "";
         }
 
         function renderProView(l) {
-            // 飞星列表
+            // 1. 飞星列表
             const yS = getNum(l.getYearNineStar());
             const mS = getNum(l.getMonthNineStar());
             const dS = getNum(l.getDayNineStar());
             const colorize = (n, txt) => {
-                const colors = ["","blue","black","green","green","orange","gray","red","white","purple"];
-                return `<span style="color:${colors[n]}; font-weight:bold;">${txt}</span>`;
+                const colors = ["","blue","black","green","green","orange","gray","red","brown","purple"];
+                return `<span style="color:var(--star-${getColorName(n)}); font-weight:bold;">${txt}</span>`;
             };
-            
             document.getElementById('fsList').innerHTML = `
                 <div class="star-list-item"><span style="color:#666">流年 (${l.getYearInGanZhi()})</span> <span class="star-tag">${colorize(yS, l.getYearNineStar().toString())}</span></div>
                 <div class="star-list-item"><span style="color:#666">流月 (${l.getMonthInGanZhi()})</span> <span class="star-tag">${colorize(mS, l.getMonthNineStar().toString())}</span></div>
                 <div class="star-list-item"><span style="color:#666">流日 (${l.getDayInGanZhi()})</span> <span class="star-tag">${colorize(dS, l.getDayNineStar().toString())}</span></div>
             `;
 
-            // 四化表格
-            const table = document.getElementById('sihuaTable');
-            const getStars = (g) => {
-                const map = {"甲":["廉贞","破军","武曲","太阳"],"乙":["天机","天梁","紫微","太阴"],"丙":["天同","天机","文昌","廉贞"],"丁":["太阴","天同","天机","巨门"],"戊":["贪狼","太阴","右弼","天机"],"己":["武曲","贪狼","天梁","文曲"],"庚":["太阳","武曲","太阴","天同"],"辛":["巨门","太阳","文曲","文昌"],"壬":["天梁","紫微","左辅","武曲"],"癸":["破军","巨门","太阴","贪狼"]};
-                return map[g] || ["-","-","-","-"];
-            }
-            const row = (lbl, s) => `<tr><td>${lbl}</td><td class="c-lu">${s[0]}</td><td class="c-quan">${s[1]}</td><td class="c-ke">${s[2]}</td><td class="c-ji">${s[3]}</td></tr>`;
-            
+            // 2. 四化表格
             const yg=l.getYearGan(), mg=l.getMonthGan(), dg=l.getDayGan();
-            table.innerHTML = `
-                <tr><th></th><th class="c-lu">禄</th><th class="c-quan">权</th><th class="c-ke">科</th><th class="c-ji">忌</th></tr>
+            const getStars = (gan) => {
+                const map = {"甲":["廉贞","破军","武曲","太阳"],"乙":["天机","天梁","紫微","太阴"],"丙":["天同","天机","文昌","廉贞"],"丁":["太阴","天同","天机","巨门"],"戊":["贪狼","太阴","右弼","天机"],"己":["武曲","贪狼","天梁","文曲"],"庚":["太阳","武曲","太阴","天同"],"辛":["巨门","太阳","文曲","文昌"],"壬":["天梁","紫微","左辅","武曲"],"癸":["破军","巨门","太阴","贪狼"]};
+                return map[gan] || ["-","-","-","-"];
+            }
+            
+            const row = (lbl, s) => `
+                <div class="sh-cell sh-label">${lbl}</div>
+                <div class="sh-cell c-lu">${s[0]}</div>
+                <div class="sh-cell c-quan">${s[1]}</div>
+                <div class="sh-cell c-ke">${s[2]}</div>
+                <div class="sh-cell c-ji">${s[3]}</div>
+            `;
+            document.getElementById('sihuaContent').innerHTML = `
                 ${row(yg+'年', getStars(yg))}
                 ${row(mg+'月', getStars(mg))}
                 ${row(dg+'日', getStars(dg))}
@@ -464,7 +543,29 @@
 
         function mapDir(d) { const m={"坎":"正北","离":"正南","震":"正东","兑":"正西","巽":"东南","坤":"西南","艮":"东北","乾":"西北","中":"中宫"}; return m[d]||d; }
         function getNum(s) { let n=parseInt(s.getNumber()); return isNaN(n)?5:n; }
+        function getColorName(n) { const c=["","water","earth","wood","wood","earth","metal","metal","earth","fire"]; return c[n] || 'earth'; }
         function getDateKey(d) { return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`; }
+        function isSameDay(d1, d2) { return d1.getFullYear()===d2.getFullYear() && d1.getMonth()===d2.getMonth() && d1.getDate()===d2.getDate(); }
+        
+        function exportJournal() {
+            let txt = "Panna 日记备份\n\n";
+            for(let i=0; i<localStorage.length; i++) {
+                let k = localStorage.key(i);
+                if(k.startsWith('panna_j_')) {
+                    txt += `[${k.replace('panna_j_','')}]\n${localStorage.getItem(k)}\n\n`;
+                }
+            }
+            const blob = new Blob([txt], {type:'text/plain'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `panna_journal_backup_${new Date().toISOString().slice(0,10)}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            alert("日记导出成功！");
+        }
     </script>
 </body>
 </html>
