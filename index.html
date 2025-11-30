@@ -18,9 +18,9 @@
             --font-cn: "ZCOOL KuaiLe", sans-serif;
             --font-en: "Nunito", sans-serif;
             --primary: #5d6d7e;
-            --accent: #d35400;
+            --accent: #e67e22;
             --glass: rgba(255, 255, 255, 0.9);
-            --shadow: 0 4px 15px rgba(0,0,0,0.05);
+            --shadow: 0 8px 20px rgba(0,0,0,0.06);
             --tab-height: 60px;
             
             /* 四化色 */
@@ -46,6 +46,7 @@
             display: flex; align-items: center; padding: 0 20px; 
             padding-top: env(safe-area-inset-top);
             z-index: 100; background: rgba(255,255,255,0.6); backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.3);
         }
         .logo { font-size: 1.4rem; color: var(--primary); font-weight: bold; letter-spacing: 1px; }
 
@@ -58,20 +59,33 @@
             scroll-behavior: smooth;
         }
 
-        .view-section { display: none; padding: 15px; animation: fadeIn 0.3s ease; }
+        .view-section { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
         .view-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* === 日历 === */
+        /* === 卡片通用 === */
+        .card { 
+            background: var(--glass); border-radius: 16px; padding: 20px; 
+            margin-bottom: 20px; box-shadow: var(--shadow); 
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .card h3 { 
+            margin: 0 0 15px 0; font-size: 1rem; color: #888; 
+            text-transform: uppercase; display: flex; align-items: center; gap: 8px; 
+            border-bottom: 1px dashed #eee; padding-bottom: 8px;
+        }
+        .card h3 i { color: var(--primary); }
+
+        /* === 日历视图 === */
         .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #fff; padding: 10px; border-radius: 12px; box-shadow: var(--shadow); }
         .cal-title { font-size: 1.2rem; font-weight: bold; color: var(--primary); }
         .btn-nav { width: 32px; height: 32px; border-radius: 50%; border: none; background: #f0f0f0; color: #555; font-size: 1rem; }
 
-        .weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; margin-bottom: 5px; font-size: 0.9rem; color: #888; }
-        .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+        .weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; margin-bottom: 10px; font-size: 0.9rem; color: #888; }
+        .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
         
         .day-cell {
-            background: #fff; border-radius: 8px; aspect-ratio: 1;
+            background: #fff; border-radius: 10px; aspect-ratio: 1;
             display: flex; flex-direction: column; justify-content: flex-start; align-items: center;
             position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.02); padding-top: 4px;
         }
@@ -81,56 +95,70 @@
         .g-num { font-size: 1.1rem; font-weight: bold; line-height: 1.2; }
         .lunar-num { font-size: 0.6rem; color: #999; line-height: 1.2; }
         .holiday { font-size: 0.6rem; color: #c0392b; font-weight: bold; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 90%; text-align: center;}
-        .tag-chu { position: absolute; bottom: 2px; right: 2px; font-size: 0.5rem; background: #e74c3c; color: #fff; padding: 1px 3px; border-radius: 3px; transform: scale(0.8); }
-        
-        .astro-box { background: #fff; padding: 15px; border-radius: 12px; margin-top: 20px; box-shadow: var(--shadow); }
-        .astro-title { font-size: 1rem; font-weight: bold; color: var(--primary); margin-bottom: 10px; border-bottom: 1px dashed #eee; padding-bottom: 5px; }
-        .astro-item { display: flex; gap: 10px; margin-bottom: 6px; font-size: 0.85rem; align-items: center; }
-        .astro-date { font-weight: bold; color: var(--accent); min-width: 40px; }
+        .tag-chu { position: absolute; bottom: 3px; right: 3px; font-size: 0.5rem; background: #e74c3c; color: #fff; padding: 1px 3px; border-radius: 3px; }
 
-        /* === 今日 === */
+        .astro-item { display: flex; gap: 10px; margin-bottom: 8px; font-size: 0.9rem; align-items: center; border-bottom: 1px dashed rgba(0,0,0,0.05); padding-bottom: 4px;}
+        .astro-date { font-weight: bold; color: var(--primary); background: rgba(255,255,255,0.5); padding: 1px 6px; border-radius: 4px; min-width: 45px; text-align: center;}
+
+        /* === 今日视图 === */
         .big-date-box { text-align: center; margin-bottom: 20px; padding: 10px 0; }
-        .bd-num { font-size: 4rem; line-height: 1; color: var(--primary); font-weight: bold; }
-        .bd-lunar { font-size: 1.1rem; margin-top: 5px; color: #555; }
-        .bd-gz { background: #fff; padding: 4px 12px; border-radius: 15px; display: inline-block; margin-top: 8px; font-size: 0.9rem; color: #888; border: 1px solid #eee; }
-
-        .card { background: var(--glass); border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: var(--shadow); }
-        .card h3 { margin: 0 0 10px 0; font-size: 0.95rem; color: #999; text-transform: uppercase; display: flex; align-items: center; gap: 6px; border-bottom: 1px dashed #eee; padding-bottom: 8px; }
-        .card h3 i { color: var(--primary); }
+        .bd-num { font-size: 5rem; line-height: 1; color: var(--primary); font-weight: bold; letter-spacing: -2px;}
+        .bd-lunar { font-size: 1.2rem; margin-top: 5px; color: #555; }
+        .bd-gz { background: #fff; padding: 4px 12px; border-radius: 15px; display: inline-block; margin-top: 10px; font-size: 0.95rem; color: #888; border: 1px solid #eee; }
 
         /* 宜忌 */
-        .yiji-row { display: flex; margin-bottom: 6px; font-size: 0.95rem; line-height: 1.4; align-items: flex-start;}
-        .badge { padding: 1px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-right: 8px; height: fit-content; white-space: nowrap; }
+        .yiji-row { display: flex; margin-bottom: 8px; font-size: 1rem; line-height: 1.5; align-items: flex-start;}
+        .badge { padding: 2px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; margin-right: 10px; height: fit-content; white-space: nowrap; }
         .bg-yi { background: #e8f5e9; color: #27ae60; }
         .bg-ji { background: #ffebee; color: #c0392b; }
-
-        /* 紫微 & 飞星 通用列表样式 */
-        .star-row { display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 6px; border-bottom: 1px dashed rgba(0,0,0,0.05); padding-bottom: 4px; }
-        .star-label { font-weight: bold; color: #444; }
-        .star-val span { margin-left: 5px; font-weight: bold; }
         
-        /* 颜色 */
-        .c-lu { color: var(--c-lu); } .c-quan { color: var(--c-quan); } .c-ke { color: var(--c-ke); } .c-ji { color: var(--c-ji); }
-        .c-water { color: var(--star-water); } .c-earth { color: var(--star-earth); } .c-wood { color: var(--star-wood); } .c-metal { color: var(--star-metal); } .c-fire { color: var(--star-fire); }
+        /* 能量信息 */
+        .info-grid { display: grid; grid-template-columns: 1fr; gap: 8px; font-size: 0.95rem; color: #555; }
+        .info-item { display: flex; justify-content: space-between; border-bottom: 1px dashed #f0f0f0; padding-bottom: 5px;}
+        .info-item b { color: #444; }
+
+        /* Tips */
+        .tips-box { font-size: 1.05rem; color: #444; line-height: 1.6; font-weight: bold; color: var(--primary);}
+
+        /* 日记 */
+        .journal-area { background: #fff; border-radius: 12px; padding: 15px; border: 1px solid #eee; }
+        #journalInput { width: 100%; height: 100px; border: none; outline: none; resize: none; font-size: 1rem; line-height: 1.6; background: transparent; font-family: var(--font-cn); }
+
+        /* === 玄学页 (有点玄) === */
+        .star-list-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0; font-size: 1rem; }
+        .star-tag { font-weight: bold; font-size: 1.1rem; }
+
+        /* 四化列表 */
+        .sihua-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        .sihua-table td { padding: 8px 4px; text-align: center; border-bottom: 1px dashed #eee; }
+        .sh-label { font-weight: bold; text-align: left; color: #666; }
+        .c-lu { color: var(--c-lu); font-weight: bold;} 
+        .c-quan { color: var(--c-quan); font-weight: bold;} 
+        .c-ke { color: var(--c-ke); font-weight: bold;} 
+        .c-ji { color: var(--c-ji); font-weight: bold;}
 
         /* 底部 Tab */
         .tab-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: calc(var(--tab-height) + env(safe-area-inset-bottom));
             background: #fff; border-top: 1px solid #eee; display: flex; justify-content: space-around; padding-top: 8px; z-index: 99;
         }
-        .tab-item { display: flex; flex-direction: column; align-items: center; color: #ccc; font-size: 0.7rem; }
+        .tab-item { display: flex; flex-direction: column; align-items: center; color: #ccc; font-size: 0.7rem; transition: 0.2s;}
         .tab-item i { font-size: 1.4rem; margin-bottom: 2px; }
-        .tab-item.active { color: var(--primary); }
+        .tab-item.active { color: var(--primary); transform: translateY(-2px); }
 
-        /* 日记 */
-        .journal-area { flex: 1; background: #fff; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; min-height: 120px;}
-        #journalInput { width: 100%; height: 100%; border: none; outline: none; resize: none; font-size: 1rem; line-height: 1.6; background: transparent; font-family: var(--font-cn);}
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+
+        @media (max-width: 900px) {
+            .app-container { flex-direction: column; height: auto; width: 100%; border-radius: 0; }
+            .glass-panel { flex-direction: column; height: auto; border-radius: 0; border: none; }
+            .left-panel, .right-panel { width: 100%; padding: 20px; overflow: visible; flex-direction: column; }
+        }
     </style>
 </head>
 <body>
 
     <header class="app-header">
-        <div class="logo">🎨 Panna</div>
+        <div class="logo">✏️ Panna</div>
     </header>
 
     <main class="main-viewport">
@@ -144,13 +172,13 @@
             <div class="weekdays"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
             <div class="days-grid" id="calendarGrid"></div>
             
-            <div class="astro-box">
-                <div class="astro-title"><i class="fas fa-star"></i> 本月重要天象 (2025-27)</div>
+            <div class="card" style="margin-top: 20px;">
+                <h3><i class="fas fa-star"></i> 本月重要天象</h3>
                 <div id="astroList"></div>
             </div>
         </div>
 
-        <!-- 视图2：今日 -->
+        <!-- 视图2：今日 (极简) -->
         <div id="view-today" class="view-section">
             <div class="big-date-box">
                 <div class="bd-num" id="todayDay">--</div>
@@ -158,19 +186,6 @@
                 <div class="bd-gz" id="todayGanZhi"></div>
             </div>
 
-            <!-- 九宫飞星 (简洁版) -->
-            <div class="card">
-                <h3><i class="fas fa-compass"></i> 九宫飞星 </h3>
-                <div id="fsList"></div>
-            </div>
-
-            <!-- 紫微四化 -->
-            <div class="card">
-                <h3><i class="fas fa-bahai"></i> 紫微四化</h3>
-                <div id="sihuaContent"></div>
-            </div>
-
-            <!-- 传统运势 -->
             <div class="card">
                 <h3><i class="fas fa-scroll"></i> 本日宜忌</h3>
                 <div class="yiji-row">
@@ -179,21 +194,50 @@
                 <div class="yiji-row">
                     <span class="badge bg-ji">忌</span> <span id="todayJi"></span>
                 </div>
-                <div style="margin-top:8px; font-size:0.9rem; color:#555;">
-                    建除：<b id="todayJianChu" style="color:var(--accent)"></b> &nbsp;|&nbsp; 值神：<span id="todayZhiShen"></span>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-bolt"></i> 能量方位</h3>
+                <div class="info-grid">
+                    <div class="info-item"><span>财神</span> <b id="godCai"></b></div>
+                    <div class="info-item"><span>喜神 (姻缘)</span> <b id="godXi"></b></div>
+                    <div class="info-item"><span>福神 (贵人)</span> <b id="godFu"></b></div>
+                    <div class="info-item"><span>冲煞</span> <b id="chongSha"></b></div>
                 </div>
             </div>
 
             <div class="card">
                 <h3><i class="fas fa-lightbulb"></i> 每日Tips</h3>
-                <div id="todayAdvice" style="color:#444; line-height:1.5;"></div>
+                <div class="tips-box" id="todayAdvice"></div>
             </div>
 
             <div class="card">
                 <h3><i class="fas fa-pen"></i> 心情随记</h3>
-                <textarea id="journalInput" placeholder="记录当下的想法..."></textarea>
+                <div class="journal-area">
+                    <textarea id="journalInput" placeholder="写下今天的感受... (自动保存)"></textarea>
+                </div>
             </div>
         </div>
+
+        <!-- 视图3：有点玄 (玄学数据) -->
+        <div id="view-pro" class="view-section">
+            <h2 style="margin-bottom:20px; color:var(--primary);">有点玄</h2>
+            
+            <div class="card">
+                <h3><i class="fas fa-th"></i> 九宫飞星</h3>
+                <div id="fsList">
+                    <!-- JS 填充 -->
+                </div>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-bahai"></i> 紫微四化</h3>
+                <table class="sihua-table" id="sihuaTable">
+                    <!-- JS 填充 -->
+                </table>
+            </div>
+        </div>
+
     </main>
 
     <nav class="tab-bar">
@@ -203,34 +247,58 @@
         <div class="tab-item" onclick="switchTab('view-today', this)">
             <i class="fas fa-sun"></i> <span>今日</span>
         </div>
+        <div class="tab-item" onclick="switchTab('view-pro', this)">
+            <i class="fas fa-yin-yang"></i> <span>有点玄</span>
+        </div>
     </nav>
 
     <script>
+        // === 全局变量 ===
         let currentDate = new Date();
         let selectedDate = new Date();
         const monthNames = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
         
-        // 2025-2027 星象库
+        // === 星象库 (2025-2027) ===
         const AstroDB = {
             "2025-10": [{d:24,t:"太阳进天蝎"}],
             "2025-11": [{d:9,t:"水逆开始"},{d:20,t:"冥王进水瓶"},{d:27,t:"土星顺行"},{d:29,t:"水星顺行"}],
             "2025-12": [{d:21,t:"冬至"}],
             "2026-1": [{d:20,t:"太阳进水瓶"}],
             "2026-2": [{d:14,t:"土星进白羊"},{d:17,t:"日环食"},{d:26,t:"水逆开始"}],
+            "2026-4": [{d:26,t:"海王进白羊"}],
             "2026-6": [{d:9,t:"木星进巨蟹"},{d:29,t:"水逆开始"}],
+            "2026-7": [{d:7,t:"天王进双子"}],
             "2026-8": [{d:12,t:"日全食"}],
             "2026-10": [{d:3,t:"金星逆行"},{d:24,t:"水逆开始"}],
             "2027-1": [{d:2,t:"火星逆行"}],
             "2027-2": [{d:6,t:"日环食"},{d:20,t:"水逆开始"}],
             "default": [{d:22,t:"太阳换座"}]
         };
-        const ModernEvents = ["出行","纳财","入宅","嫁娶","交易","会友","签约","装修","搬家","祈福","开市","动土"];
+        
+        // 现代宜忌白名单
+        const ModernEvents = ["出行","纳财","入宅","嫁娶","交易","会友","签约","装修","搬家","祈福","开市","动土","置产","安床","理发","求医"];
+        
+        // 背景图配置
+        const bgImages = [
+            "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=80&w=1000", 
+            "https://images.unsplash.com/photo-1507643179173-39db2965446c?q=80&w=1000", 
+            "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1000", 
+            "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=1000", 
+            "https://images.unsplash.com/photo-1530982011887-3cc11cc85693?q=80&w=1000", 
+            "https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?q=80&w=1000", 
+            "https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=1000", 
+            "https://images.unsplash.com/photo-1506259091721-347f798196d4?q=80&w=1000", 
+            "https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=1000", 
+            "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1000", 
+            "https://images.unsplash.com/photo-1483232539664-d89d58f8f159?q=80&w=1000", 
+            "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?q=80&w=1000"
+        ];
+        const seasonColors = ["#95a5a6", "#d2b4de", "#a9dfbf", "#a3e4d7", "#f5cba7", "#aed6f1", "#f1948a", "#edbb99", "#d7bde2", "#abb2b9", "#566573", "#808b96"];
 
         // === 初始化 ===
         window.onload = function() {
-            if(typeof Lunar === 'undefined') { alert("核心组件加载失败，请检查网络"); return; }
-            renderCalendar();
-            updateDetails(selectedDate);
+            if(typeof Lunar === 'undefined') { alert("组件加载失败，请刷新"); return; }
+            renderHome();
             document.getElementById('journalInput').addEventListener('input', function(){
                 localStorage.setItem('panna_j_'+getDateKey(selectedDate), this.value);
             });
@@ -243,17 +311,28 @@
             btn.classList.add('active');
         }
 
-        // === 日历 ===
+        function renderHome() {
+            const m = currentDate.getMonth();
+            document.body.style.backgroundImage = `url('${bgImages[m]}')`;
+            document.documentElement.style.setProperty('--season-accent', seasonColors[m]);
+            
+            renderCalendar();
+            updateDetails(selectedDate);
+            
+            const k = `${currentDate.getFullYear()}-${currentDate.getMonth()+1}`;
+            const events = AstroDB[k] || AstroDB["default"];
+            document.getElementById('astroList').innerHTML = events.map(e => `<div class="astro-item"><span class="astro-date">${e.d}日</span><span>${e.t}</span></div>`).join('');
+        }
+
         function changeMonth(n) {
             currentDate.setMonth(currentDate.getMonth() + n);
-            renderCalendar();
+            renderHome();
         }
 
         function renderCalendar() {
             const y = currentDate.getFullYear();
             const m = currentDate.getMonth();
-            document.getElementById('calTitle').innerText = `${y}年 ${m+1}月`;
-            
+            document.querySelector('.cal-title').innerText = `${y}年 ${m+1}月`;
             const grid = document.getElementById('calendarGrid');
             grid.innerHTML = '';
             
@@ -267,41 +346,37 @@
                 const l = Lunar.fromDate(d);
                 const isSel = d.toDateString() === selectedDate.toDateString();
                 
-                let dayTxt = l.getDayInChinese();
+                let txt = l.getDayInChinese();
                 let style = "";
-                let tags = "";
+                let tag = "";
 
-                const festivals = l.getFestivals();
-                const jieQi = l.getJieQi();
+                const fs = l.getFestivals();
+                const jq = l.getJieQi();
+                const major = ["春节","元宵节","端午节","七夕节","中秋节","重阳节","除夕","国庆节","劳动节","元旦"];
                 
-                if(festivals.length > 0) { 
-                    const major = ["春节","元宵节","端午节","七夕节","中秋节","重阳节","除夕"];
-                    if(major.includes(festivals[0])) { dayTxt = festivals[0]; style = "color:#c0392b;font-weight:bold"; }
-                } else if(jieQi) { 
-                    dayTxt = jieQi; style = "color:#d35400;font-weight:bold"; 
-                } else if(dayTxt==='初一' || dayTxt==='十五') {
+                if(fs.length && major.includes(fs[0])) { 
+                    tag = `<div class="holiday">${fs[0]}</div>`; 
+                    txt = ""; 
+                } else if (jq) {
+                    tag = `<div class="holiday" style="color:#d35400">${jq}</div>`;
+                    txt = "";
+                } else if(txt==='初一'||txt==='十五') {
                     style = "color:#d35400;font-weight:bold";
                 }
-
-                if(l.getZhiXing() === '除') tags = `<div class="tag-chu">除</div>`;
+                
+                if(l.getZhiXing() === '除') tag += `<div class="tag-chu">除</div>`;
 
                 const div = document.createElement('div');
                 div.className = `day-cell ${isSel?'active':''}`;
-                div.innerHTML = `<span class="g-num">${i}</span><span class="lunar-num" style="${style}">${dayTxt}</span>${tags}`;
+                div.innerHTML = `<span class="g-num">${i}</span><span class="lunar-num" style="${style}">${txt}</span>${tag}`;
                 div.onclick = () => { 
-                    selectedDate = d; renderCalendar(); updateDetails(d); switchTab('view-today', document.querySelectorAll('.tab-item')[1]); 
+                    selectedDate = d; renderCalendar(); updateDetails(d); 
+                    switchTab('view-today', document.querySelectorAll('.tab-item')[1]); 
                 };
                 grid.appendChild(div);
             }
-
-            const k = `${y}-${m+1}`;
-            const events = AstroDB[k] || AstroDB["default"];
-            document.getElementById('astroList').innerHTML = events.map(e => 
-                `<div class="timeline-item"><span style="font-weight:bold;color:var(--primary)">${e.d}日</span><span>${e.t}</span></div>`
-            ).join('');
         }
 
-        // === 详情 ===
         function updateDetails(date) {
             const l = Lunar.fromDate(date);
             
@@ -315,72 +390,80 @@
             document.getElementById('todayYi').innerText = yi.length ? yi.join(' ') : "平";
             document.getElementById('todayJi').innerText = ji.length ? ji.join(' ') : "平";
             
-            document.getElementById('todayJianChu').innerText = l.getZhiXing() + "日";
-            document.getElementById('todayZhiShen').innerText = l.getDayTianShen();
+            // 吉方 (白话)
+            document.getElementById('godCai').innerText = mapDir(l.getDayPositionCai());
+            document.getElementById('godXi').innerText = mapDir(l.getDayPositionXi());
+            document.getElementById('godFu').innerText = mapDir(l.getDayPositionFu());
+            document.getElementById('chongSha').innerText = `冲${l.getDayChongDesc()} 煞${mapDir(l.getDaySha())}`;
 
-            // 九宫飞星 (简洁版)
-            renderFlyingStars(l);
-
-            // 紫微四化
-            renderSiHua(l);
+            // Tips (智能生成)
+            let tip = "🌈 保持平和，享受当下的每一个瞬间。";
+            const yg = l.getYearGan();
             
-            // Tips
-            let tip = "保持平和。";
-            if(l.getDay()===1) tip = "新月日，适合许愿。";
-            if(l.getZhiXing()==='除') tip = "除日，适合大扫除。";
+            // 优先星象
             const k = `${date.getFullYear()}-${date.getMonth()+1}`;
-            if(AstroDB[k] && AstroDB[k].some(e => e.t.includes("水逆开始"))) tip = "水星逆行，注意沟通与电子设备。";
+            if(AstroDB[k]) {
+                const evt = AstroDB[k].find(e=>e.d===date.getDate());
+                if(evt) tip = `💡 星象提示：${evt.t}，请顺应能量变化。`;
+                else if(AstroDB[k].some(e=>e.t.includes("水逆开始"))) tip = "🌊 水星逆行期间，请多做内省，谨慎沟通。";
+            }
+            // 其次节气/节日
+            const fs = l.getFestivals();
+            const jq = l.getJieQi();
+            if(fs.length) tip = `🎉 今天是${fs[0]}，祝您节日快乐！`;
+            else if(jq) tip = `🌱 今日${jq}，顺应天时，调整身心。`;
+            
+            // 再次四化/飞星
+            else {
+                 if(yg === "甲") tip = "💰 廉贞化禄，利于社交与创新，保持开放心态。";
+                 if(yg === "丁") tip = "🌙 太阴化禄，财运不错，也适合关注家庭。";
+                 if(l.getDay()===1) tip = "🌑 新月日，适合许下本月心愿。";
+                 if(l.getZhiXing()==='除') tip = "🧹 除日，适合大扫除，清理负能量。";
+            }
             
             document.getElementById('todayAdvice').innerText = tip;
+
+            // 刷新第三页数据
+            renderProView(l);
 
             document.getElementById('journalInput').value = localStorage.getItem('panna_j_'+getDateKey(date)) || "";
         }
 
-        // 九宫飞星 (文字版)
-        function renderFlyingStars(l) {
-            const yStar = l.getYearNineStar().toString();
-            const mStar = l.getMonthNineStar().toString();
-            const dStar = l.getDayNineStar().toString();
-            
-            const colorize = (s) => {
-                let c = "";
-                if(s.includes('白') || s.includes('水')) c = "var(--star-water)";
-                else if(s.includes('黑') || s.includes('土') || s.includes('黄')) c = "var(--star-earth)";
-                else if(s.includes('碧') || s.includes('绿')) c = "var(--star-wood)";
-                else if(s.includes('赤') || s.includes('紫')) c = "var(--star-fire)";
-                else c = "var(--star-metal)";
-                return `<span style="color:${c}; font-weight:bold;">${s.slice(0,2)}</span>`; // 只取前两个字，如“二黑”
+        function renderProView(l) {
+            // 飞星列表
+            const yS = getNum(l.getYearNineStar());
+            const mS = getNum(l.getMonthNineStar());
+            const dS = getNum(l.getDayNineStar());
+            const colorize = (n, txt) => {
+                const colors = ["","blue","black","green","green","orange","gray","red","white","purple"];
+                return `<span style="color:${colors[n]}; font-weight:bold;">${txt}</span>`;
             };
-
-            const row = (label, star) => `
-                <div class="star-row">
-                    <span class="star-label">${label}</span>
-                    <div class="star-val">${colorize(star)}</div>
-                </div>`;
             
-            document.getElementById('fsList').innerHTML = 
-                row(`流年 (${l.getYearInGanZhi()})`, yStar) +
-                row(`流月 (${l.getMonthInGanZhi()})`, mStar) +
-                row(`流日 (${l.getDayInGanZhi()})`, dStar);
-        }
+            document.getElementById('fsList').innerHTML = `
+                <div class="star-list-item"><span style="color:#666">流年 (${l.getYearInGanZhi()})</span> <span class="star-tag">${colorize(yS, l.getYearNineStar().toString())}</span></div>
+                <div class="star-list-item"><span style="color:#666">流月 (${l.getMonthInGanZhi()})</span> <span class="star-tag">${colorize(mS, l.getMonthNineStar().toString())}</span></div>
+                <div class="star-list-item"><span style="color:#666">流日 (${l.getDayInGanZhi()})</span> <span class="star-tag">${colorize(dS, l.getDayNineStar().toString())}</span></div>
+            `;
 
-        // 紫微四化
-        function renderSiHua(l) {
-            const yg=l.getYearGan(), mg=l.getMonthGan(), dg=l.getDayGan();
-            const getStars = (gan) => {
+            // 四化表格
+            const table = document.getElementById('sihuaTable');
+            const getStars = (g) => {
                 const map = {"甲":["廉贞","破军","武曲","太阳"],"乙":["天机","天梁","紫微","太阴"],"丙":["天同","天机","文昌","廉贞"],"丁":["太阴","天同","天机","巨门"],"戊":["贪狼","太阴","右弼","天机"],"己":["武曲","贪狼","天梁","文曲"],"庚":["太阳","武曲","太阴","天同"],"辛":["巨门","太阳","文曲","文昌"],"壬":["天梁","紫微","左辅","武曲"],"癸":["破军","巨门","太阴","贪狼"]};
-                return map[gan] || ["-","-","-","-"];
+                return map[g] || ["-","-","-","-"];
             }
-            const row = (label, s) => `
-                <div class="star-row">
-                    <span class="star-label">${label}</span>
-                    <div class="sihua-vals">
-                        <span style="color:var(--c-lu)">${s[0]}</span><span style="color:var(--c-quan)">${s[1]}</span><span style="color:var(--c-ke)">${s[2]}</span><span style="color:var(--c-ji)">${s[3]}</span>
-                    </div>
-                </div>`;
-            document.getElementById('sihuaContent').innerHTML = row(`流年(${yg})`, getStars(yg)) + row(`流月(${mg})`, getStars(mg)) + row(`流日(${dg})`, getStars(dg));
+            const row = (lbl, s) => `<tr><td>${lbl}</td><td class="c-lu">${s[0]}</td><td class="c-quan">${s[1]}</td><td class="c-ke">${s[2]}</td><td class="c-ji">${s[3]}</td></tr>`;
+            
+            const yg=l.getYearGan(), mg=l.getMonthGan(), dg=l.getDayGan();
+            table.innerHTML = `
+                <tr><th></th><th class="c-lu">禄</th><th class="c-quan">权</th><th class="c-ke">科</th><th class="c-ji">忌</th></tr>
+                ${row(yg+'年', getStars(yg))}
+                ${row(mg+'月', getStars(mg))}
+                ${row(dg+'日', getStars(dg))}
+            `;
         }
 
+        function mapDir(d) { const m={"坎":"正北","离":"正南","震":"正东","兑":"正西","巽":"东南","坤":"西南","艮":"东北","乾":"西北","中":"中宫"}; return m[d]||d; }
+        function getNum(s) { let n=parseInt(s.getNumber()); return isNaN(n)?5:n; }
         function getDateKey(d) { return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`; }
     </script>
 </body>
