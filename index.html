@@ -97,6 +97,17 @@
         .card h3 { margin: 0 0 10px 0; font-size: 0.95rem; color: #999; text-transform: uppercase; display: flex; align-items: center; gap: 6px; border-bottom: 1px dashed #eee; padding-bottom: 8px; }
         .card h3 i { color: var(--primary); }
 
+         /* 特殊锦囊按钮 */
+        .special-btn {
+            width: 100%; padding: 15px; border: none; border-radius: 12px;
+            background: linear-gradient(135deg, #ff9966, #ff5e62);
+            color: #fff; font-size: 1.1rem; font-weight: bold; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 4px 15px rgba(255, 94, 98, 0.3); margin-bottom: 20px;
+            animation: popIn 0.5s ease;
+        }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
         .yiji-row { display: flex; margin-bottom: 6px; font-size: 0.95rem; line-height: 1.4; align-items: flex-start;}
         .badge { padding: 1px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-right: 8px; height: fit-content; white-space: nowrap; }
         .bg-yi { background: #e8f5e9; color: #27ae60; }
@@ -132,6 +143,19 @@
         .tab-item i { font-size: 1.4rem; margin-bottom: 2px; }
         .tab-item.active { color: var(--primary); }
 
+  /* 弹窗 */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #f5f7fa; z-index: 2000; display: none; flex-direction: column;
+            transform: translateY(100%); transition: transform 0.3s ease;
+        }
+        .modal.show { display: flex; transform: translateY(0); }
+        .modal-header {
+            padding: 15px; background: #fff; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #eee; padding-top: calc(15px + env(safe-area-inset-top));
+        }
+        .modal-body { flex: 1; overflow-y: auto; padding: 20px; }
+        
         ::-webkit-scrollbar { width: 0px; background: transparent; }
 
         @media (max-width: 900px) {
@@ -169,7 +193,14 @@
                 <div class="bd-lunar" id="todayLunar">加载中...</div>
                 <div class="bd-gz" id="todayGanZhi"></div>
             </div>
-
+            
+     <!-- 限时锦囊入口 (动态显示) -->
+            <div id="specialEventContainer" style="display:none;">
+                <button class="special-btn" onclick="openSpecialModal()">
+                    <i class="fas fa-envelope-open-text"></i> <span id="specialEventTitle"></span>
+                </button>
+            </div>
+            
             <div class="card">
                 <h3><i class="fas fa-scroll"></i> 本日宜忌</h3>
                 <div class="yiji-row">
@@ -180,6 +211,7 @@
                 </div>
                 <div class="jianchu-info">
                     <span>建除：<b id="todayJianChu" style="color:var(--accent)"></b></span>
+                    <span>值神：<span id="todayZhiShen"></span></span>
                                 </div>
             </div>
 
@@ -249,6 +281,18 @@
         </div>
     </nav>
 
+    <!-- 弹窗：限时锦囊 -->
+    <div id="specialModal" class="modal">
+        <div class="modal-header" style="background:#fff9f0; border-bottom:1px solid #ffe0b2;">
+            <button onclick="closeSpecialModal()" style="border:none; background:none; font-size:1.5rem; color:#d35400">&times;</button>
+            <h3 style="margin:0; color:#d35400" id="spModalTitle"></h3>
+            <div style="width:20px"></div>
+        </div>
+        <div class="modal-body" style="background:#fffdf5;">
+            <div id="spModalContent" style="font-size:1.05rem; line-height:1.8; color:#444;"></div>
+        </div>
+    </div>
+    
     <script>
         let currentDate = new Date();
         let selectedDate = new Date();
@@ -557,6 +601,34 @@
             `;
         }
 
+  function checkTimeCapsule(date) {
+            const m = date.getMonth() + 1;
+            const d = date.getDate();
+            const y = date.getFullYear();
+            const container = document.getElementById('specialEventContainer');
+            
+            // 示例：2025年冬至
+            if (y === 2025 && m === 12 && d >= 21) {
+                container.style.display = 'block';
+                document.getElementById('specialEventTitle').innerText = "🔥 2026丙午年运程前瞻";
+                window.currentSpecialContent = {
+                    title: "2026丙午年·红火运程",
+                    content: "<p>丙午天河水，火气最旺。正南太岁勿动土，中宫二黑放铜葫芦。</p>"
+                };
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
+        function openSpecialModal() {
+            if (!window.currentSpecialContent) return;
+            document.getElementById('spModalTitle').innerText = window.currentSpecialContent.title;
+            document.getElementById('spModalContent').innerHTML = window.currentSpecialContent.content;
+            document.getElementById('specialModal').classList.add('show');
+        }
+        function closeSpecialModal() { document.getElementById('specialModal').classList.remove('show'); }
+
+        
         function mapDir(d) { const m={"坎":"正北","离":"正南","震":"正东","兑":"正西","巽":"东南","坤":"西南","艮":"东北","乾":"西北","中":"中宫"}; return m[d]||d; }
         function getNum(s) { let n=parseInt(s.getNumber()); return isNaN(n)?5:n; }
         function getColorName(n) { const c=["","water","earth","wood","wood","earth","metal","metal","earth","fire"]; return c[n] || 'earth'; }
