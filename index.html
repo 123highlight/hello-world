@@ -333,6 +333,20 @@
         ];
         const seasonColors = ["#8d99ae", "#ffb7b2", "#a8e6cf", "#95d5b2", "#ff9f1c", "#48cae4", "#ff6b6b", "#e07a5f", "#d4a373", "#457b9d", "#d62828", "#bc4749"];
 
+  
+        // 限时锦囊配置
+        const TimeCapsules = [
+            {
+                id: "bingwu_2026",
+                start: "12-21", end: "02-06", year: 2026,
+                title: "🔥 2026丙午年运程前瞻",
+                content: `<div style="text-align:center;margin-bottom:15px;"><h2 style="color:#c0392b">丙午天河水</h2><p style="color:#666">火气最旺的一年，重在修心</p></div><p><b>重点提示：</b><br>1. 正南方为太岁方及五黄位，切忌动土。西北二黑病符，摆放铜葫芦化解。<br>2. 中宫一白，正东八白，东南九紫为吉方。<br>3. 穿黄色衣物泄火气，做事勿冲动。</p>`
+            }
+        ];
+
+
+
+        
         // === 初始化 ===
         window.onload = function() {
             if(typeof Lunar === 'undefined') { alert("核心组件加载失败，请检查网络"); return; }
@@ -443,8 +457,10 @@
                     const f = fs[0];
                     if(f==="春节") tip = "🧨 春节快乐！愿新的一年万事顺遂，平安喜乐。";
                     else if(f==="元宵节") tip = "🏮 元宵快乐！愿生活圆满，前途明亮。";
+                    else if(f==="清明节") tip = "清明至，祭先祖;携家人，去扫墓。柳色新，春莫负;多保重，情如故。";
                     else if(f==="端午节") tip = "🐲 端午安康！愿您百毒不侵，诸邪退散。";
                     else if(f==="中秋节") tip = "🥮 中秋快乐！愿花好月圆，人月两团圆。";
+                     else if(f==="重阳节") tip = "岁岁重阳，今又重阳，不似春光，胜似春光。";    
                     else if(f==="除夕") tip = "🧧 辞旧迎新，愿您扫除烦恼，迎接美好。";
                     else tip = `🎉 今天是${f}，祝您节日快乐！`;
                 }
