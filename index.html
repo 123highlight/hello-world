@@ -476,7 +476,12 @@ const CUSTOM_TIPS = {
                 document.getElementById('godFu').innerText = mapDir(l.getDayPositionFu());
                 document.getElementById('chongSha').innerText = `冲${l.getDayChongDesc()} 煞${mapDir(l.getDaySha())}`;
                 // === 智能 Tips 生成逻辑 ===
-                let tip = "";
+                const y = date.getFullYear();
+                const m = String(date.getMonth() + 1).padStart(2, '0');
+                const d = String(date.getDate()).padStart(2, '0');
+                const customTipKey = `${y}-${m}-${d}`;
+                let tip = CUSTOM_TIPS[customTipKey] || "";
+                
                 const fs = l.getFestivals();
                 const k = `${date.getFullYear()}-${date.getMonth()+1}`;
                 
