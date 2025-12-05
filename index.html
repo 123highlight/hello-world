@@ -15,6 +15,7 @@
         :root {
             --font-cn: "ZCOOL KuaiLe", sans-serif;
             --font-en: "Nunito", sans-serif;
+            --font-magic: "Cinzel Decorative", cursive;
             --primary: #5d6d7e;
             --accent: #d35400;
             --glass: rgba(255, 255, 255, 0.9);
@@ -151,6 +152,99 @@
         @media (max-width: 900px) {
             .app-container { flex-direction: column; height: auto; width: 100%; border-radius: 0; }
         }
+
+ /* === 塔罗页面样式 === */
+        #view-tarot {
+            background: #0f0c29;
+            background: -webkit-linear-gradient(to top, #24243e, #302b63, #0f0c29);
+            background: linear-gradient(to top, #24243e, #302b63, #0f0c29);
+            color: #f0f0f0;
+            font-family: var(--font-en);
+            position: relative;
+            overflow: hidden;
+        }
+        /* 魔力光点动画 */
+        #view-tarot::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            z-index: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1.5px);
+            background-size: 25px 25px;
+            animation: magicParticles 60s linear infinite;
+        }
+        @keyframes magicParticles {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .tarot-container { position: relative; z-index: 1; }
+        .tarot-form { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; text-align: center; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); }
+        .tarot-form label { display: block; font-family: var(--font-magic); font-size: 1.5rem; letter-spacing: 2px; margin-bottom: 15px; color: #fff; text-shadow: 0 0 10px #dda0dd; }
+        .tarot-form input { width: 80%; padding: 10px; border-radius: 8px; border: 1px solid #888; font-size: 1rem; text-align: center; margin-bottom: 20px; background-color: #333; color: #fff; }
+        .tarot-submit-btn {
+            padding: 12px 30px; font-size: 1.1rem; font-weight: bold; color: #000;
+            background: linear-gradient(145deg, #f0e68c, #ffd700);
+            border: none; border-radius: 50px; cursor: pointer;
+            box-shadow: 0 0 20px #ffd700, inset 0 0 5px #fff;
+            transition: all 0.3s ease;
+        }
+        .tarot-submit-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px #ffd700, inset 0 0 10px #fff; }
+
+        #divination-result { display: none; margin-top: 20px; animation: fadeIn 1s ease; }
+        
+        .zodiac-section { text-align: center; margin-bottom: 30px; }
+        .zodiac-icon { font-size: 4rem; }
+        .zodiac-name { font-family: var(--font-magic); font-size: 2.5rem; margin: 5px 0; color: #fff; text-shadow: 0 0 15px #fff; }
+        .zodiac-score { font-family: var(--font-magic); font-size: 1.2rem; color: #ffd700; }
+        .zodiac-keywords { margin-top: 10px; font-size: 1rem; color: #ddd; }
+        .zodiac-keywords span { display: inline-block; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 15px; margin: 0 5px; }
+
+        .magic-circle {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .tarot-card {
+            background: rgba(0,0,0,0.4);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            backdrop-filter: blur(3px);
+            position: relative;
+            overflow: hidden;
+        }
+        /* 光效动画 */
+        .tarot-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, transparent, transparent, var(--glow-color));
+            animation: rotateGlow 4s linear infinite;
+        }
+        @keyframes rotateGlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .tarot-card-content { position: relative; z-index: 2; background: inherit; border-radius: 10px; padding: 5px; }
+
+        /* 主题色 */
+        .tarot-card.love { --glow-color: #ff69b4; border: 1px solid #ff69b4; }
+        .tarot-card.career { --glow-color: #ffd700; border: 1px solid #ffd700; }
+        .tarot-card.wealth { --glow-color: #32cd32; border: 1px solid #32cd32; }
+        .tarot-card.health { --glow-color: #00bfff; border: 1px solid #00bfff; }
+        
+        .card-symbol { font-size: 0.9rem; color: #ccc; margin-bottom: 5px; }
+        .card-name { font-family: var(--font-magic); font-size: 1.1rem; margin-bottom: 5px; }
+        .card-position { font-size: 0.8rem; font-weight: bold; margin-bottom: 10px; }
+        .card-meaning { font-family: var(--font-en); font-size: 0.85rem; line-height: 1.5; color: #eee; }
     </style>
 </head>
 <body>
@@ -184,7 +278,7 @@
                 <div class="bd-gz" id="todayGanZhi"></div>
             </div>
             
-     <!-- 限时锦囊入口 (动态显示) -->
+            <!-- 限时锦囊入口 (动态显示) -->
             <div id="specialEventContainer" style="display:none;">
                 <button class="special-btn" onclick="openSpecialModal()">
                     <i class="fas fa-envelope-open-text"></i> <span id="specialEventTitle"></span>
@@ -201,7 +295,7 @@
                 </div>
                 <div class="jianchu-info">
                     <span>建除：<b id="todayJianChu" style="color:var(--accent)"></b></span>
-                                </div>
+                </div>
             </div>
 
             <div class="card">
@@ -227,7 +321,37 @@
             </div>
         </div>
 
-        <!-- 视图3：有点玄 -->
+        <!-- 视图3: 塔罗运势 -->
+        <div id="view-tarot" class="view-section">
+            <div class="tarot-container">
+                <form id="tarotForm" class="tarot-form">
+                    <label for="birthDate">请选择你的生日</label>
+                    <input type="date" id="birthDate" required>
+                    <button type="submit" class="tarot-submit-btn">开始占卜</button>
+                </form>
+
+                <div id="divination-result">
+                    <div class="zodiac-section">
+                        <div id="zodiacIcon" class="zodiac-icon"></div>
+                        <div id="zodiacName" class="zodiac-name"></div>
+                        <div id="zodiacScore" class="zodiac-score"></div>
+                        <div id="zodiacKeywords" class="zodiac-keywords"></div>
+                    </div>
+                    <div class="magic-circle">
+                        <!-- 东方：爱情 -->
+                        <div id="tarot-love" class="tarot-card love"></div>
+                        <!-- 南方：事业 -->
+                        <div id="tarot-career" class="tarot-card career"></div>
+                        <!-- 西方：财运 -->
+                        <div id="tarot-wealth" class="tarot-card wealth"></div>
+                        <!-- 北方：健康 -->
+                        <div id="tarot-health" class="tarot-card health"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 视图4：有点玄 -->
         <div id="view-pro" class="view-section">
             <h2 style="margin-bottom:20px; color:var(--primary);">有点玄</h2>
             
@@ -263,6 +387,9 @@
         </div>
         <div class="tab-item" onclick="switchTab('view-today', this)">
             <i class="fas fa-sun"></i> <span>今日</span>
+        </div>
+        <div class="tab-item" onclick="switchTab('view-tarot', this)">
+            <i class="fas fa-magic"></i> <span>塔罗</span>
         </div>
         <div class="tab-item" onclick="switchTab('view-pro', this)">
             <i class="fas fa-yin-yang"></i> <span>有点玄</span>
@@ -400,12 +527,21 @@ const RECURRING_TIPS = {
         
         // === 初始化 ===
         window.onload = function() {
-            if(typeof Lunar === 'undefined') { alert("核心组件加载失败，请检查网络"); return; }
-            renderHome();
-            document.getElementById('journalInput').addEventListener('input', function(){
-                localStorage.setItem('panna_j_'+getDateKey(selectedDate), this.value);
+            if(typeof Lunar === 'undefined') { 
+                alert("核心组件加载失败，请检查网络"); 
+                return; 
+            }
+            
+            // 绑定核心事件
+            document.getElementById('tarotForm').addEventListener('submit', handleDivination);
+            document.getElementById('journalInput').addEventListener('input', function() {
+                localStorage.setItem('panna_j_' + getDateKey(selectedDate), this.value);
             });
+            
+            // 渲染首页
+            renderHome();
         };
+
         function switchTab(viewId, btn) {
             document.querySelectorAll('.view-section').forEach(e => e.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
@@ -606,6 +742,119 @@ const RECURRING_TIPS = {
                 ${row(dg+'日', getStars(dg))}
             `;
         }
+
+ /* === 塔罗占卜逻辑 === */
+        const ZODIAC_SIGNS = [
+            { name: '白羊座', icon: '♈️', start: '03-21', end: '04-19' },
+            { name: '金牛座', icon: '♉️', start: '04-20', end: '05-20' },
+            { name: '双子座', icon: '♊️', start: '05-21', end: '06-21' },
+            { name: '巨蟹座', icon: '♋️', start: '06-22', end: '07-22' },
+            { name: '狮子座', icon: '♌️', start: '07-23', end: '08-22' },
+            { name: '处女座', icon: '♍️', start: '08-23', end: '09-22' },
+            { name: '天秤座', icon: '♎️', start: '09-23', end: '10-23' },
+            { name: '天蝎座', icon: '♏️', start: '10-24', end: '11-22' },
+            { name: '射手座', icon: '♐️', start: '11-23', end: '12-21' },
+            { name: '摩羯座', icon: '♑️', start: '12-22', end: '01-19' },
+            { name: '水瓶座', icon: '♒️', start: '01-20', end: '02-18' },
+            { name: '双鱼座', icon: '♓️', start: '02-19', end: '03-20' }
+        ];
+
+        const TAROT_CARDS = [
+            { name: '愚者', upright: '新的开始，无限可能。请勇敢地跃入未知，宇宙将接住你。', reversed: '鲁莽的决定，逃避责任。在行动前，请三思星辰的轨迹。' },
+            { name: '魔术师', upright: '意志化为现实。你掌握着所有元素的能量，去创造你的奇迹吧。', reversed: '才能被滥用，欺骗与操纵。警惕那些看似华丽的幻象。' },
+            { name: '女祭司', upright: '直觉与奥秘。倾听你内心的低语，月光下的秘密即将揭晓。', reversed: '秘密被隐藏，直觉被忽略。是时候向内探索，而非向外寻求。' },
+            { name: '女皇', upright: '丰收、创造与母性。如同大地母亲，你的花园将结出甜美的果实。', reversed: '创造力受阻，过度依赖。给予自己空间，重新找回 nurturing 的力量。' },
+            { name: '皇帝', upright: '权威、结构与父权。建立你的帝国，用秩序和智慧来统治。', reversed: '控制欲过强，滥用权力。真正的力量源于内心的稳定，而非外在的掌控。' },
+            { name: '教皇', upright: '传统、信仰与教诲。在古老的智慧中，你将找到前行的指引。', reversed: '挑战传统，思想僵化。是时候打破束缚，寻找属于你自己的真理。' },
+            { name: '恋人', upright: '结合、选择与和谐。在心的十字路口，做出与灵魂共鸣的选择。', reversed: '关系失和，错误的选择。重新审视你的价值观，别让分歧拆散联盟。' },
+            { name: '战车', upright: '胜利、决心与掌控。驾驭你内在的黑白双马，向着目标疾驰。', reversed: '失控，方向错误。放慢脚步，重新校准你的内在罗盘。' },
+            { name: '力量', upright: '内在的力量，勇气与慈悲。温柔地驯服你内心的野兽，化为盟友。', reversed: '软弱，缺乏自信。唤醒你沉睡的勇气，你比你想象的更强大。' },
+            { name: '隐士', upright: '内省，寻求智慧。提灯独行，在静默中，你将听到宇宙的答案。', reversed: '孤立，与世隔绝。是时候走出你的洞穴，分享你的光芒。' },
+            { name: '命运之轮', upright: '转折点，命运与机遇。宇宙的齿轮正在转动，准备迎接变化。', reversed: '厄运，抗拒改变。接受周期的起落，逆境中亦有成长的契机。' },
+            { name: '正义', upright: '公平、真理与因果。你的每个念头和行为，都将被宇宙精确地衡量。', reversed: '不公，偏见。摘下你的有色眼镜，用清澈的眼光看待事实。' },
+            { name: '倒吊人', upright: '牺牲、新的视角。换个角度看世界，你会发现被束缚的智慧。', reversed: '无谓的牺牲，停滞不前。是时候解开绳索，让双脚重回大地。' },
+            { name: '死神', upright: '结束与重生。不必恐惧，旧的篇章必须终结，新的黎明才会到来。', reversed: '抗拒结束， stagnating。放手吧，枯萎的叶子无法迎来春天。' },
+            { name: '节制', upright: '平衡、融合与耐心。像炼金术士一样，调和对立的能量，创造和谐。', reversed: '失衡，极端。寻找你生活的中心点，避免走向任何一个极端。' },
+            { name: '恶魔', upright: '束缚、物质主义与诱惑。审视那些锁住你的锁链，钥匙就在你手中。', reversed: '打破束缚，重获自由。你拥有挣脱阴影、走向光明的力量。' },
+            { name: '高塔', upright: '突变、解放与启示。看似毁灭的闪电，是为了让你看到虚假的基石。', reversed: '逃避灾难，延缓变革。改变无法避免，主动面对好过被动承受。' },
+            { name: '星星', upright: '希望、灵感与治愈。在黑暗的夜空中，请追寻那颗最亮的星。', reversed: '绝望，失去信念。即使乌云密布，星星也一直在那里，从未离开。' },
+            { name: '月亮', upright: '幻象、潜意识与不安。穿越迷雾森林，你的直觉是你最好的向导。', reversed: '恐惧消散，真相大白。黎明即将来临，月光下的阴影将被驱散。' },
+            { name: '太阳', upright: '喜悦、成功与活力。尽情享受阳光的照耀，你的光芒将感染世界。', reversed: '短暂的成功，缺乏热情。重新点燃你内心的火焰，找回纯粹的快乐。' },
+            { name: '审判', upright: '复活、召唤与觉醒。听到内在的号角声，这是你灵魂重生的时刻。', reversed: '自我评判，错过机会。原谅过去，才能拥抱未来的召唤。' },
+            { name: '世界', upright: '完成、整合与成就。一个周期的圆满结束，享受你的胜利之舞。', reversed: '未完成，停滞。思考是哪个环节让你停下，完成这最后的旅程。' }
+        ];
+        
+        const HOROSCOPE_KEYWORDS = ['机遇', '突破', '疗愈', '挑战', '浪漫', '沟通', '合作', '沉淀', '冒险', '家庭', '友谊', '学习', '成长', '惊喜'];
+
+        function getZodiacSign(date) {
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const dateStr = `${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+            
+            for (const sign of ZODIAC_SIGNS) {
+                const start = sign.start.split('-');
+                const end = sign.end.split('-');
+                
+                if (sign.name === '摩羯座') { // 跨年份的星座
+                    if ((month == 12 && day >= 22) || (month == 1 && day <= 19)) {
+                        return sign;
+                    }
+                } else if (dateStr >= sign.start && dateStr <= sign.end) {
+                    return sign;
+                }
+            }
+            return ZODIAC_SIGNS[9]; // 默认摩羯
+        }
+
+        function drawTarotCard() {
+            const card = TAROT_CARDS[Math.floor(Math.random() * TAROT_CARDS.length)];
+            const position = Math.random() > 0.5 ? '正位' : '逆位';
+            const meaning = position === '正位' ? card.upright : card.reversed;
+            return { name: card.name, position, meaning };
+        }
+
+        function handleDivination(e) {
+            e.preventDefault();
+            const birthDateInput = document.getElementById('birthDate');
+            if (!birthDateInput.value) {
+                alert('请先选择你的生日。');
+                return;
+            }
+
+            const birthDate = new Date(birthDateInput.value);
+            const zodiac = getZodiacSign(birthDate);
+
+            // 生成星座运势
+            document.getElementById('zodiacIcon').innerText = zodiac.icon;
+            document.getElementById('zodiacName').innerText = zodiac.name;
+            const score = Math.floor(Math.random() * 71) + 30; // 30-100
+            document.getElementById('zodiacScore').innerText = `今日运势评分: ${score}`;
+            
+            let keywords = [...HOROSCOPE_KEYWORDS].sort(() => 0.5 - Math.random()).slice(0, 3);
+            document.getElementById('zodiacKeywords').innerHTML = keywords.map(k => `<span>${k}</span>`).join('');
+
+            // 生成塔罗牌
+            const renderCard = (elementId, symbol, card) => {
+                const el = document.getElementById(elementId);
+                el.innerHTML = `
+                    <div class="tarot-card-content">
+                        <div class="card-symbol">${symbol}</div>
+                        <div class="card-name">${card.name}</div>
+                        <div class="card-position" style="color: ${card.position === '正位' ? 'lightgreen' : 'lightcoral'}">${card.position}</div>
+                        <div class="card-meaning">${card.meaning}</div>
+                    </div>
+                `;
+            };
+            
+            renderCard('tarot-love', '东方 · 爱情', drawTarotCard());
+            renderCard('tarot-career', '南方 · 事业', drawTarotCard());
+            renderCard('tarot-wealth', '西方 · 财运', drawTarotCard());
+            renderCard('tarot-health', '北方 · 健康', drawTarotCard());
+
+            // 显示结果
+            document.getElementById('divination-result').style.display = 'block';
+        }
+
 
         // 限时锦囊
     function checkTimeCapsule(date) {
