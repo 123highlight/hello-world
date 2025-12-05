@@ -294,7 +294,9 @@ const CUSTOM_TIPS = {
   "2025-12-10": "海王星顺行， 灵性、同情心增强，但也极易产生“幻想和骗局”。需要进行现实检验，警惕虚假信息。水星对冲天王星，决定性的、颠覆性的消息或事件将出现。此相位与美国国家星盘的月亮紧密相关，可能触发其国内的持续动荡与变革。",
   "2025-12-14": "火星刑克海王星，行动需谨慎，避免因仓促行事而犯错。",
   "2025-12-15": "火星进入魔羯座，在未来六周为摩羯座注入动力和能量，帮助其采取行动，但也可能在个人生活中引发冲突。",
-  "2025-12-17": "太阳刑克土星，在节日前带来又一次现实的考验，让人回归现实，情绪可能较为沉重。"
+  "2025-12-17": "太阳刑克土星，在节日前带来又一次现实的考验，让人回归现实，情绪可能较为沉重。",
+  "2025-12-21": "冬至一阳生，宜开启丙午年风水布局。"
+
 };
 
 // 适用于所有年份的Tips
@@ -491,16 +493,15 @@ const RECURRING_TIPS = {
                 const d = String(date.getDate()).padStart(2, '0');
                 let tip = "";
 
-                // 优先级1: 特定日期的Tips
-const customTipKey = `${y}-${m}-${d}`;
-tip = CUSTOM_TIPS[customTipKey] || "";
+                // 优先级1: 每年循环的Tips
+                const recurringTipKey = `${m}-${d}`;
+                tip = RECURRING_TIPS[recurringTipKey] || "";
 
-// 优先级2: 每年循环的Tips (如果没找到特定Tip)
-if (!tip) {
-    const recurringTipKey = `${m}-${d}`;
-    tip = RECURRING_TIPS[recurringTipKey] || "";
-}
-
+                // 优先级2: 特定日期的Tips (如果没找到循环Tip)
+                if (!tip) {
+                    const customTipKey = `${y}-${m}-${d}`;
+                    tip = CUSTOM_TIPS[customTipKey] || "";
+                }
 
                 const fs = l.getFestivals();
                 const k = `${date.getFullYear()}-${date.getMonth()+1}`;
