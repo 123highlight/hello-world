@@ -286,26 +286,24 @@
         let currentDate = new Date();
         let selectedDate = new Date();
         const monthNames = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
+
 // 特定年份的Tips
 const CUSTOM_TIPS = {
+  "2024-05-20": "❤️ 520 Special: Love is in the air!",
+  "2024-06-01": "🎈 Children's Day: Keep your inner child alive.",
   "2025-12-07": "今日大雪，开启戊子月，欲望扩张，投机娱乐活跃。需警惕计划赶不上变化，交通通讯或科技发展受阻。",
   "2025-12-09": "今日需要务实和面对现实的考验。情绪可能低落，普遍感到“杯子半空”。",
   "2025-12-10": "海王星顺行， 灵性、同情心增强，但也极易产生“幻想和骗局”。需要进行现实检验，警惕虚假信息。水星对冲天王星，决定性的、颠覆性的消息或事件将出现。此相位与美国国家星盘的月亮紧密相关，可能触发其国内的持续动荡与变革。",
   "2025-12-14": "火星刑克海王星，行动需谨慎，避免因仓促行事而犯错。",
   "2025-12-15": "火星进入魔羯座，在未来六周为摩羯座注入动力和能量，帮助其采取行动，但也可能在个人生活中引发冲突。",
-  "2025-12-17": "太阳刑克土星，在节日前带来又一次现实的考验，让人回归现实，情绪可能较为沉重。"，
-  "2025-12-21": "今日冬至，宜开始丙午年风水布局。"        
+  "2025-12-17": "太阳刑克土星，在节日前带来又一次现实的考验，让人回归现实，情绪可能较为沉重。"
 };
-        
+
 // 适用于所有年份的Tips
 const RECURRING_TIPS = {
     "01-01": "🎉 元旦快乐！新的一年，新的开始，愿你万事如意！",
-    “05-20": "❤️ 520 Special: Love is in the air!",
-    "06-01": "🎈 Children's Day: Keep your inner child alive.",
-    "12-25": "🎄圣诞快乐，宜温馨相聚。" ,
     "12-31": "🥂 年末倒数！感恩过去一年的所有相遇，期待全新的开始。"
 };
-
         
         // === 2025-2028 星象库 (User Data) ===
         const AstroDB = {
@@ -485,7 +483,7 @@ const RECURRING_TIPS = {
                 document.getElementById('godFu').innerText = mapDir(l.getDayPositionFu());
                 document.getElementById('chongSha').innerText = `冲${l.getDayChongDesc()} 煞${mapDir(l.getDaySha())}`;
                 
-                 // === 智能 Tips 生成逻辑 (有优先级) ===
+                // === 智能 Tips 生成逻辑 (有优先级) ===
                 const y = date.getFullYear();
                 const m = String(date.getMonth() + 1).padStart(2, '0');
                 const d = String(date.getDate()).padStart(2, '0');
