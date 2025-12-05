@@ -491,15 +491,16 @@ const RECURRING_TIPS = {
                 const d = String(date.getDate()).padStart(2, '0');
                 let tip = "";
 
-                // 优先级1: 每年循环的Tips
-                const recurringTipKey = `${m}-${d}`;
-                tip = RECURRING_TIPS[recurringTipKey] || "";
+                // 优先级1: 特定日期的Tips
+const customTipKey = `${y}-${m}-${d}`;
+tip = CUSTOM_TIPS[customTipKey] || "";
 
-                // 优先级2: 特定日期的Tips (如果没找到循环Tip)
-                if (!tip) {
-                    const customTipKey = `${y}-${m}-${d}`;
-                    tip = CUSTOM_TIPS[customTipKey] || "";
-                }
+// 优先级2: 每年循环的Tips (如果没找到特定Tip)
+if (!tip) {
+    const recurringTipKey = `${m}-${d}`;
+    tip = RECURRING_TIPS[recurringTipKey] || "";
+}
+
 
                 const fs = l.getFestivals();
                 const k = `${date.getFullYear()}-${date.getMonth()+1}`;
