@@ -286,7 +286,7 @@
         let currentDate = new Date();
         let selectedDate = new Date();
         const monthNames = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
-
+// 特定年份的Tips
 const CUSTOM_TIPS = {
   "2025-12-07": "今日大雪，开启戊子月，欲望扩张，投机娱乐活跃。需警惕计划赶不上变化，交通通讯或科技发展受阻。",
   "2025-12-09": "今日需要务实和面对现实的考验。情绪可能低落，普遍感到“杯子半空”。",
@@ -485,7 +485,7 @@ const RECURRING_TIPS = {
                 document.getElementById('godFu').innerText = mapDir(l.getDayPositionFu());
                 document.getElementById('chongSha').innerText = `冲${l.getDayChongDesc()} 煞${mapDir(l.getDaySha())}`;
                 
-                // === 智能 Tips 生成逻辑 ===
+                 // === 智能 Tips 生成逻辑 (有优先级) ===
                 const y = date.getFullYear();
                 const m = String(date.getMonth() + 1).padStart(2, '0');
                 const d = String(date.getDate()).padStart(2, '0');
@@ -500,11 +500,11 @@ const RECURRING_TIPS = {
                     const customTipKey = `${y}-${m}-${d}`;
                     tip = CUSTOM_TIPS[customTipKey] || "";
                 }
-                
+
                 const fs = l.getFestivals();
                 const k = `${date.getFullYear()}-${date.getMonth()+1}`;
                 
-            // 优先级3: 节日祝福
+                // 优先级3: 节日祝福
                 if(!tip && fs.length) {
                     const f = fs[0];
                     if(f==="春节") tip = "🧨 春节快乐！愿新的一年万事顺遂，平安喜乐。";
@@ -518,11 +518,10 @@ const RECURRING_TIPS = {
                 }
                 // 优先级4: 星象提示
                 if(!tip && AstroDB[k]) {
-                    // 查找当天是否有星象
                     const dayNum = date.getDate();
                     const evt = AstroDB[k].find(e => {
                         if(typeof e.d === 'number') return e.d === dayNum;
-                        if(typeof e.d === 'string') return parseInt(e.d) === dayNum; // 简单匹配开始日
+                        if(typeof e.d === 'string') return parseInt(e.d) === dayNum;
                         return false;
                     });
                     if(evt) {
@@ -534,14 +533,14 @@ const RECURRING_TIPS = {
                         else tip = `💡 星象提示：${t}`;
                     }
                 }
-           // 优先级5: 流月四化 (初一显示)
+                // 优先级5: 流月四化 (初一显示)
                 if(!tip && l.getDay() === 1) {
                     const mg = l.getMonthGan();
                     if(SiHuaTips[mg]) {
                         tip = `<span class="tips-hl">📅 本月社会趋势 (${mg}干)：</span>${SiHuaTips[mg]}`;
                     }
                 }
-                // 6. 默认兜底
+                // 优先级6: 默认兜底
                 if(!tip) {
                     if(l.getZhiXing() === '除') tip = "🧹 除日：适合大扫除，清理身心负荷。";
                     else tip = "🌈 保持平和心态，专注当下，美好自会发生。";
