@@ -658,6 +658,11 @@
   </div>
 
   <div class="card">
+    <div class="card-title"><span class="icon">👗</span>今日幸运色</div>
+    <div id="lucky-color-display"></div>
+  </div>
+
+  <div class="card">
     <div class="card-title"><span class="icon">⚡</span>时辰五行能量</div>
     <div id="wuxing-display" style="font-size:0.8rem;line-height:1.8"></div>
   </div>
@@ -979,6 +984,9 @@ function renderBazi() {
   // Meaning
   document.getElementById('shichen-meaning').innerHTML = SHICHEN_MEANING[SHICHEN_NAMES[bazi.shichenIdx]] || '';
 
+  // 幸运色
+  renderLuckyColor(bazi.day.dz);
+
   // Wuxing display
   const dayWx = WUXING_TG[TIANGAN.indexOf(bazi.day.tg)];
   const hourWx = WUXING_TG[TIANGAN.indexOf(bazi.hour.tg)];
@@ -1048,6 +1056,71 @@ function getWuxingCombo(day, hour) {
     '水水': '水气重，感受力强，容易多愁善感，但灵性高，适合冥想和内省。'
   };
   return combos[day+hour] || '五行相互作用，顺势而为，保持平衡。';
+}
+
+// ===== LUCKY COLOR =====
+const LUCKY_COLOR_MAP = {
+  // 寅卯日（木）→ 木生火 → 红色/粉色
+  '寅': { colors:['#e74c3c','#e91e8c'], names:['红色','粉色'], wuxing:'木', desc:'木生火，今日穿红或粉，借天时之力最吉。' },
+  '卯': { colors:['#e74c3c','#e91e8c'], names:['红色','粉色'], wuxing:'木', desc:'木生火，今日穿红或粉，借天时之力最吉。' },
+  // 巳午日（火）→ 火生土 → 黄色/棕色
+  '巳': { colors:['#f39c12','#8d6434'], names:['黄色','棕色'], wuxing:'火', desc:'火生土，今日穿黄或棕，顺势而为最吉。' },
+  '午': { colors:['#f39c12','#8d6434'], names:['黄色','棕色'], wuxing:'火', desc:'火生土，今日穿黄或棕，顺势而为最吉。' },
+  // 申酉日（金）→ 金生水 → 黑色/蓝色
+  '申': { colors:['#2c3e50','#2980b9'], names:['黑色','蓝色'], wuxing:'金', desc:'金生水，今日穿黑或蓝，顺天时之势最吉。' },
+  '酉': { colors:['#2c3e50','#2980b9'], names:['黑色','蓝色'], wuxing:'金', desc:'金生水，今日穿黑或蓝，顺天时之势最吉。' },
+  // 亥子日（水）→ 水生木 → 绿色/青色
+  '亥': { colors:['#27ae60','#1abc9c'], names:['绿色','青色'], wuxing:'水', desc:'水生木，今日穿绿或青，天时滋养最吉。' },
+  '子': { colors:['#27ae60','#1abc9c'], names:['绿色','青色'], wuxing:'水', desc:'水生木，今日穿绿或青，天时滋养最吉。' },
+  // 辰戌丑未日（土）→ 土生金 → 白色/金色
+  '辰': { colors:['#ecf0f1','#f0c040'], names:['白色','金色'], wuxing:'土', desc:'土生金，今日穿白或金，厚积薄发最吉。' },
+  '戌': { colors:['#ecf0f1','#f0c040'], names:['白色','金色'], wuxing:'土', desc:'土生金，今日穿白或金，厚积薄发最吉。' },
+  '丑': { colors:['#ecf0f1','#f0c040'], names:['白色','金色'], wuxing:'土', desc:'土生金，今日穿白或金，厚积薄发最吉。' },
+  '未': { colors:['#ecf0f1','#f0c040'], names:['白色','金色'], wuxing:'土', desc:'土生金，今日穿白或金，厚积薄发最吉。' },
+};
+
+const WUXING_NAME = { '木':'木','火':'火','土':'土','金':'金','水':'水' };
+const DIZHI_WUXING = {
+  '子':'水','丑':'土','寅':'木','卯':'木','辰':'土','巳':'火',
+  '午':'火','未':'土','申':'金','酉':'金','戌':'土','亥':'水'
+};
+
+function renderLuckyColor(dayDZ) {
+  const info = LUCKY_COLOR_MAP[dayDZ];
+  const el = document.getElementById('lucky-color-display');
+  if (!info || !el) return;
+
+  const [c1, c2] = info.colors;
+  const [n1, n2] = info.names;
+  // 白色加边框处理
+  const swatch1Style = c1 === '#ecf0f1'
+    ? `background:${c1};border:2px solid #ccc;`
+    : `background:${c1};`;
+  const swatch2Style = c2 === '#ecf0f1'
+    ? `background:${c2};border:2px solid #ccc;`
+    : `background:${c2};`;
+
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
+      <div style="display:flex;gap:8px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+          <div style="width:48px;height:48px;border-radius:50%;${swatch1Style}box-shadow:0 2px 8px rgba(0,0,0,0.12)"></div>
+          <div style="font-size:0.65rem;color:var(--stone)">${n1}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+          <div style="width:48px;height:48px;border-radius:50%;${swatch2Style}box-shadow:0 2px 8px rgba(0,0,0,0.12)"></div>
+          <div style="font-size:0.65rem;color:var(--stone)">${n2}</div>
+        </div>
+      </div>
+      <div style="flex:1">
+        <div style="font-size:0.75rem;color:var(--stone);margin-bottom:3px">今日地支 <strong style="color:var(--sky-dark)">${dayDZ}</strong>（${info.wuxing}日）</div>
+        <div style="font-size:0.82rem;color:var(--ink);line-height:1.6">${info.desc}</div>
+      </div>
+    </div>
+    <div style="background:var(--sky-pale);border-radius:10px;padding:9px 12px;font-size:0.75rem;color:var(--sky-dark);line-height:1.6">
+      💡 原理：${DIZHI_WUXING[dayDZ]}日，天时五行为<strong>${info.wuxing}</strong>，穿<strong>${info.wuxing}</strong>所生之色（${n1}或${n2}），顺势借力，开运最佳。
+    </div>
+  `;
 }
 
 // ===== ASTROLOGY =====
