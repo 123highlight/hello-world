@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>般若日历</title>
+<title>有点玄 · 般若日历</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lunar-javascript/1.6.12/lunar.min.js"></script>
 <script>if(typeof Lunar === 'undefined') document.write('<script src="https://unpkg.com/lunar-javascript/lunar.js"><\/script>');</script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Sans+SC:wght@300;400&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Nunito:wght@400;600;700&family=Noto+Sans+SC:wght@400;500&display=swap');
 
   :root {
     --ink: #2a3442;
@@ -34,8 +34,8 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: 'Noto Sans SC', 'PingFang SC', sans-serif;
-    font-weight: 300;
+    font-family: 'Nunito', 'Noto Sans SC', 'PingFang SC', sans-serif;
+    font-weight: 400;
     background: var(--bg);
     color: var(--ink);
     min-height: 100vh;
@@ -62,17 +62,17 @@
     box-shadow: 0 1px 0 rgba(106,174,214,0.12), var(--shadow-sm);
   }
   .app-title {
-    font-family: 'Ma Shan Zheng', serif;
-    font-size: 1.25rem;
+    font-family: 'ZCOOL KuaiLe', sans-serif;
+    font-size: 1.3rem;
     font-weight: 400;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.08em;
     color: var(--sky-deep);
   }
   .app-subtitle {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Nunito', sans-serif;
     font-size: 0.62rem;
     color: var(--stone);
-    letter-spacing: 0.24em;
+    letter-spacing: 0.2em;
     margin-top: 1px;
     font-style: italic;
   }
@@ -101,7 +101,7 @@
     flex: 0 0 auto;
     padding: 10px 16px;
     font-size: 0.74rem;
-    font-weight: 300;
+    font-weight: 400;
     color: var(--stone);
     cursor: pointer;
     border-bottom: 2px solid transparent;
@@ -132,11 +132,11 @@
     box-shadow: var(--shadow-sm);
   }
   .card-title {
-    font-family: 'Ma Shan Zheng', serif;
-    font-size: 0.9rem;
+    font-family: 'ZCOOL KuaiLe', sans-serif;
+    font-size: 0.92rem;
     font-weight: 400;
     color: var(--sky-dark);
-    letter-spacing: 0.14em;
+    letter-spacing: 0.1em;
     margin-bottom: 14px;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
@@ -177,7 +177,7 @@
     background: rgba(255,255,255,0.04);
   }
   .bazi-hero-title {
-    font-family: 'Ma Shan Zheng', serif;
+    font-family: 'ZCOOL KuaiLe', serif;
     font-size: 0.78rem;
     color: rgba(255,255,255,0.7);
     letter-spacing: 0.2em;
@@ -213,14 +213,14 @@
     margin-bottom: 6px;
   }
   .pillar-tian {
-    font-family: 'Ma Shan Zheng', serif;
+    font-family: 'ZCOOL KuaiLe', sans-serif;
     font-size: 1.55rem;
     font-weight: 400;
     line-height: 1;
     margin-bottom: 4px;
   }
   .pillar-di {
-    font-family: 'Ma Shan Zheng', serif;
+    font-family: 'ZCOOL KuaiLe', sans-serif;
     font-size: 1.55rem;
     font-weight: 400;
     line-height: 1;
@@ -296,7 +296,7 @@
     color: white;
     box-shadow: 0 2px 8px rgba(106,174,214,0.3);
   }
-  .shichen-item .sc-name { font-size: 0.68rem; font-family: 'Ma Shan Zheng', serif; }
+  .shichen-item .sc-name { font-size: 0.68rem; font-family: 'ZCOOL KuaiLe', serif; }
   .shichen-item .sc-time { font-size: 0.5rem; opacity: 0.65; margin-top: 1px; }
 
   /* ===== ASTROLOGY ===== */
@@ -343,7 +343,7 @@
     flex-shrink: 0;
     background: var(--cloud);
   }
-  .planet-name { font-size: 0.8rem; font-weight: 400; color: var(--ink); margin-bottom: 2px; }
+  .planet-name { font-size: 0.8rem; font-weight: 700; font-family: 'Nunito', sans-serif; color: var(--ink); margin-bottom: 2px; }
   .planet-transit { font-size: 0.7rem; color: var(--stone); margin-bottom: 5px; }
   .planet-tip {
     font-size: 0.7rem;
@@ -414,14 +414,14 @@
   }
   .cal-nav-btn:hover { background: white; color: var(--sky-dark); }
   .cal-month-title {
-    font-family: 'Ma Shan Zheng', serif;
+    font-family: 'ZCOOL KuaiLe', serif;
     font-size: 1.05rem; font-weight: 400;
     color: var(--sky-deep); letter-spacing: 0.12em;
   }
   .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
   .cal-weekday {
-    text-align: center; font-size: 0.6rem;
-    color: var(--stone); padding: 4px 0; letter-spacing: 0.06em;
+    text-align: center; font-size: 0.65rem;
+    color: var(--ink-soft); padding: 4px 0; letter-spacing: 0.04em; font-weight: 700;
   }
   .cal-day {
     aspect-ratio: 1;
@@ -439,8 +439,8 @@
   }
   .cal-day.today .lunar-day { color: rgba(255,255,255,0.78); }
   .cal-day.other-month { opacity: 0.22; }
-  .cal-day .solar-day { font-size: 0.85rem; line-height: 1; }
-  .cal-day .lunar-day { font-size: 0.52rem; color: var(--stone); margin-top: 2px; }
+  .cal-day .solar-day { font-size: 0.88rem; line-height: 1; font-weight: 700; color: var(--ink); }
+  .cal-day .lunar-day { font-size: 0.55rem; color: var(--stone); margin-top: 2px; font-weight: 600; }
   .cal-day .day-dot {
     width: 3px; height: 3px; border-radius: 50%;
     background: var(--sky-light); position: absolute; bottom: 3px;
@@ -469,24 +469,24 @@
     border-radius: 14px; padding: 12px;
   }
   .detail-box-title {
-    font-size: 0.63rem; color: var(--stone);
-    letter-spacing: 0.1em; margin-bottom: 8px;
+    font-size: 0.72rem; color: var(--stone);
+    letter-spacing: 0.08em; margin-bottom: 8px; font-weight: 600;
   }
   .yi-ji-tag {
-    display: inline-block; font-size: 0.68rem;
-    padding: 2px 8px; border-radius: 10px; margin: 2px 3px 2px 0;
+    display: inline-block; font-size: 0.82rem;
+    padding: 3px 10px; border-radius: 10px; margin: 3px 4px 3px 0; font-weight: 600;
   }
   .yi-tag { background: rgba(106,174,214,0.12); color: var(--sky-dark); }
   .ji-tag { background: rgba(176,142,192,0.12); color: #7a4a9a; }
 
-  .direction-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-  .dir-item { font-size: 0.68rem; display: flex; flex-direction: column; gap: 2px; }
-  .dir-name { color: var(--stone); }
-  .dir-val { font-weight: 400; color: var(--sky-dark); }
+  .direction-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .dir-item { font-size: 0.8rem; display: flex; flex-direction: column; gap: 3px; }
+  .dir-name { color: var(--stone); font-size: 0.72rem; }
+  .dir-val { font-weight: 700; color: var(--sky-dark); font-size: 0.85rem; }
 
   /* ===== DIARY ===== */
   .diary-date-header {
-    font-family: 'Ma Shan Zheng', serif;
+    font-family: 'ZCOOL KuaiLe', serif;
     font-size: 1.1rem; font-weight: 400;
     margin-bottom: 4px; color: var(--sky-deep); letter-spacing: 0.1em;
   }
@@ -494,8 +494,8 @@
   .diary-textarea {
     width: 100%; min-height: 120px;
     border: 1px solid var(--border); border-radius: 12px; padding: 12px;
-    font-family: 'Noto Sans SC', 'PingFang SC', sans-serif;
-    font-weight: 300; font-size: 0.88rem;
+    font-family: 'Nunito', 'Noto Sans SC', 'PingFang SC', sans-serif;
+    font-weight: 400; font-size: 0.88rem;
     background: var(--cloud); resize: vertical; outline: none;
     color: var(--ink); line-height: 1.8; transition: border-color 0.2s;
   }
@@ -512,7 +512,7 @@
     background: var(--sky);
     color: white; border: none; border-radius: 12px;
     padding: 10px 22px; font-size: 0.85rem; cursor: pointer;
-    font-family: 'Noto Sans SC', sans-serif; font-weight: 400;
+    font-family: 'Nunito', sans-serif; font-weight: 600;
     letter-spacing: 0.06em; transition: opacity 0.2s;
     box-shadow: 0 3px 12px rgba(106,174,214,0.3);
   }
@@ -535,7 +535,7 @@
     border-radius: 12px; padding: 10px 6px; text-align: center;
   }
   .hua-name { font-size: 0.6rem; color: var(--stone); margin-bottom: 5px; }
-  .hua-star { font-family: 'Ma Shan Zheng', serif; font-size: 0.95rem; font-weight: 400; }
+  .hua-star { font-family: 'ZCOOL KuaiLe', serif; font-size: 0.95rem; font-weight: 400; }
   .hua-lu   { color: #4a9a7a; }
   .hua-quan { color: var(--sky-dark); }
   .hua-ke   { color: var(--dusk); }
@@ -551,7 +551,7 @@
   .export-btn {
     background: var(--sky-dark); color: white; border: none;
     border-radius: 10px; padding: 8px 16px; font-size: 0.78rem;
-    cursor: pointer; font-family: 'Noto Sans SC', sans-serif;
+    cursor: pointer; font-family: 'Nunito', sans-serif;
     transition: opacity 0.2s;
   }
   .export-btn:hover { opacity: 0.85; }
@@ -564,7 +564,7 @@
     align-items: center; justify-content: center; padding: 8px; text-align: center;
   }
   .gong-cell.zhonggong { background: var(--sky-pale); border-color: rgba(106,174,214,0.35); }
-  .gong-num { font-size: 1.3rem; font-weight: 400; font-family: 'Ma Shan Zheng', serif; }
+  .gong-num { font-size: 1.3rem; font-weight: 400; font-family: 'ZCOOL KuaiLe', serif; }
   .gong-name { font-size: 0.58rem; color: var(--stone); margin-top: 2px; }
   .star-good    { color: #3a8a6a; }
   .star-bad     { color: #9a5a7a; }
@@ -704,7 +704,7 @@
 
   <div id="ganzhi-bar" style="background:white;border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 1px 6px var(--shadow)">
     <div style="font-size:0.65rem;color:var(--mist);letter-spacing:0.1em;white-space:nowrap">干支</div>
-    <div id="ganzhi-display" style="font-family:'Noto Serif SC',serif;font-size:0.92rem;font-weight:600;color:var(--ink);letter-spacing:0.18em;text-align:center"></div>
+    <div id="ganzhi-display" style="font-family:'ZCOOL KuaiLe',sans-serif;font-size:1rem;font-weight:600;color:var(--ink);letter-spacing:0.15em;text-align:center"></div>
   </div>
 
   <div class="daily-detail">
@@ -718,7 +718,7 @@
     </div>
     <div class="detail-box">
       <div class="detail-box-title">建除十二神</div>
-      <div id="jianshen-display" style="font-size:0.85rem;font-weight:700;color:var(--vermillion)"></div>
+      <div id="jianshen-display" style="font-size:1.05rem;font-weight:700;color:var(--sky-dark)"></div>
     </div>
     <div class="detail-box">
       <div class="detail-box-title">能量方位</div>
@@ -1704,4 +1704,3 @@ window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
-
