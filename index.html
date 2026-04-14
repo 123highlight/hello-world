@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>有点玄 · 般若日历</title>
+<title>般若日历</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lunar-javascript/1.6.12/lunar.min.js"></script>
 <script>if(typeof Lunar === 'undefined') document.write('<script src="https://unpkg.com/lunar-javascript/lunar.js"><\/script>');</script>
 <style>
@@ -865,33 +865,26 @@ async function detectTimezone() {
 
 // ===== BAZI CALCULATION =====
 function getBaziForDate(date) {
-  // Year pillar
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
+  // 年月日干支全部来自 lunar-javascript，保证与日历页数据一致
+  const l = Lunar.fromDate(date);
   const hour = date.getHours();
 
-  // Year GanZhi: 甲子 = 1984
-  const yearOffset = (year - 4) % 60;
-  const yearTG = TIANGAN[yearOffset % 10];
-  const yearDZ = DIZHI[yearOffset % 12];
+  // 年柱
+  const yearGZ = l.getYearInGanZhi();
+  const yearTG = yearGZ[0];
+  const yearDZ = yearGZ[1];
 
-  // Month pillar (simplified: based on solar month)
-  const monthNum = getMonthNum(year, month, day);
-  // Month TG depends on year TG cycle (甲己年 -> 丙寅起)
-  const yearTGIdx = TIANGAN.indexOf(yearTG);
-  const monthTGStart = [2, 4, 6, 8, 0, 2, 4, 6, 8, 0][yearTGIdx % 10];
-  const monthTG = TIANGAN[(monthTGStart + monthNum - 1) % 10];
-  const monthDZ = DIZHI[(monthNum + 1) % 12]; // 寅月为1月
+  // 月柱（lunar-javascript 按节气准确计算）
+  const monthGZ = l.getMonthInGanZhi();
+  const monthTG = monthGZ[0];
+  const monthDZ = monthGZ[1];
 
-  // Day pillar (simplified approximation)
-  // Using Julian Day Number approach
-  const jdn = toJulianDay(year, month, day);
-  const dayOffset = (jdn + 49) % 60;
-  const dayTG = TIANGAN[dayOffset % 10];
-  const dayDZ = DIZHI[dayOffset % 12];
+  // 日柱
+  const dayGZ = l.getDayInGanZhi();
+  const dayTG = dayGZ[0];
+  const dayDZ = dayGZ[1];
 
-  // Hour (时辰) pillar
+  // 时柱（根据日干推时干）
   const shichenIdx = getShichenIdx(hour);
   const dayTGIdx = TIANGAN.indexOf(dayTG);
   const hourTGStart = [0, 2, 4, 6, 8, 0, 2, 4, 6, 8][dayTGIdx % 10];
@@ -899,28 +892,12 @@ function getBaziForDate(date) {
   const hourDZ = DIZHI[shichenIdx];
 
   return {
-    year: { tg: yearTG, dz: yearDZ },
+    year:  { tg: yearTG,  dz: yearDZ  },
     month: { tg: monthTG, dz: monthDZ },
-    day: { tg: dayTG, dz: dayDZ },
-    hour: { tg: hourTG, dz: hourDZ },
+    day:   { tg: dayTG,   dz: dayDZ   },
+    hour:  { tg: hourTG,  dz: hourDZ  },
     shichenIdx
   };
-}
-
-function getMonthNum(year, month, day) {
-  // Solar month to lunar month number (1=寅月)
-  const solarTerms = [6,4,6,5,6,6,7,7,8,8,7,7]; // approx day of solar terms
-  let num = month - 2;
-  if (day < solarTerms[month-1]) num--;
-  if (num < 1) num += 12;
-  return num;
-}
-
-function toJulianDay(y, m, d) {
-  if (m <= 2) { y--; m += 12; }
-  const A = Math.floor(y / 100);
-  const B = 2 - A + Math.floor(A / 4);
-  return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + B - 1524;
 }
 
 function getShichenIdx(hour) {
@@ -946,6 +923,7 @@ function getShichenProgress(hour, minute) {
 }
 
 function renderBazi() {
+  if (typeof Lunar === 'undefined') return;
   const now = new Date();
   const bazi = getBaziForDate(now);
   const labels = ['年柱','月柱','日柱','时柱'];
@@ -1007,19 +985,19 @@ function renderBazi() {
   const wxColors = { '木':'#5a8a3c','火':'#e05c3a','土':'#c9a84c','金':'#7a8a9a','水':'#5b8fb9' };
   document.getElementById('wuxing-display').innerHTML = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <div style="padding:12px;background:var(--paper);border-radius:10px;border:1px solid var(--border)">
-        <div style="font-size:0.65rem;color:var(--mist);margin-bottom:4px">日主五行</div>
+      <div style="padding:12px;background:var(--bg2);border-radius:10px;border:1px solid var(--border)">
+        <div style="font-size:0.65rem;color:var(--stone);margin-bottom:4px">日主五行</div>
         <div style="font-size:1.8rem;font-weight:700;color:${wxColors[dayWx]}">${dayWx}</div>
-        <div style="font-size:0.72rem;color:var(--mist);margin-top:4px">${getWuxingTip(dayWx)}</div>
+        <div style="font-size:0.72rem;color:var(--stone);margin-top:4px">${getWuxingTip(dayWx)}</div>
       </div>
-      <div style="padding:12px;background:var(--paper);border-radius:10px;border:1px solid var(--border)">
-        <div style="font-size:0.65rem;color:var(--mist);margin-bottom:4px">时辰五行</div>
+      <div style="padding:12px;background:var(--bg2);border-radius:10px;border:1px solid var(--border)">
+        <div style="font-size:0.65rem;color:var(--stone);margin-bottom:4px">时辰五行</div>
         <div style="font-size:1.8rem;font-weight:700;color:${wxColors[hourWx]}">${hourWx}</div>
-        <div style="font-size:0.72rem;color:var(--mist);margin-top:4px">${getWuxingTip(hourWx)}</div>
+        <div style="font-size:0.72rem;color:var(--stone);margin-top:4px">${getWuxingTip(hourWx)}</div>
       </div>
     </div>
     <div style="margin-top:10px;padding:12px;background:var(--paper);border-radius:10px;border:1px solid var(--border);font-size:0.78rem;line-height:1.7">
-      <strong style="color:var(--gold)">五行综合建议：</strong>${getWuxingCombo(dayWx, hourWx)}
+      <strong style="color:var(--sky-dark)">五行综合建议：</strong>${getWuxingCombo(dayWx, hourWx)}
     </div>
   `;
 }
@@ -1163,6 +1141,22 @@ function renderAstrology() {
   const month = now.getMonth() + 1;
   const day = now.getDate();
   const key = `${year}-${month}`;
+
+  // 非2026年兜底提示
+  if (year !== 2026) {
+    document.getElementById('major-alert-container').innerHTML = `
+      <div class="alert-banner" style="background:linear-gradient(135deg,var(--stone),var(--ink-soft))">
+        <div class="alert-icon">📅</div>
+        <div class="alert-content">
+          <div class="alert-title">星象数据库覆盖2026年</div>
+          <div class="alert-tip">当前日期超出数据范围，星象事件列表暂无显示。</div>
+        </div>
+      </div>`;
+    document.getElementById('planet-list').innerHTML = '<div style="text-align:center;color:var(--stone);padding:20px;font-size:0.85rem">星象数据仅覆盖2026年</div>';
+    document.getElementById('upcoming-events').innerHTML = '';
+    renderMoonPhase(now);
+    return;
+  }
 
   // === 今日 / 近7天 星象提示 ===
   const allEvents = AstroDB2026[key] || [];
@@ -1598,9 +1592,11 @@ function initDiary() {
   const now = new Date();
   document.getElementById('diary-date').textContent =
     now.toLocaleDateString('zh-CN', { year:'numeric', month:'long', day:'numeric', weekday:'long' });
-  const bazi = getBaziForDate(now);
-  document.getElementById('diary-sub').textContent =
-    `${bazi.year.tg}${bazi.year.dz}年 · ${bazi.month.tg}${bazi.month.dz}月 · ${bazi.day.tg}${bazi.day.dz}日 · ${bazi.hour.tg}${bazi.hour.dz}时`;
+  if (typeof Lunar !== 'undefined') {
+    const bazi = getBaziForDate(now);
+    document.getElementById('diary-sub').textContent =
+      `${bazi.year.tg}${bazi.year.dz}年 · ${bazi.month.tg}${bazi.month.dz}月 · ${bazi.day.tg}${bazi.day.dz}日 · ${bazi.hour.tg}${bazi.hour.dz}时`;
+  }
   renderDiaryList();
 }
 
@@ -1635,7 +1631,7 @@ function saveDiary() {
 function renderDiaryList() {
   const container = document.getElementById('diary-list');
   if (!diaryEntries.length) {
-    container.innerHTML = '<div style="text-align:center;color:var(--mist);font-size:0.8rem;padding:20px">暂无记录，写下今天的第一篇随记吧～</div>';
+    container.innerHTML = '<div style="text-align:center;color:var(--stone);font-size:0.8rem;padding:20px">暂无记录，写下今天的第一篇随记吧～</div>';
     return;
   }
   container.innerHTML = diaryEntries.map(e => `
