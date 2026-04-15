@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>有点玄 · 般若日历</title>
+<title>般若日历</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lunar-javascript/1.6.12/lunar.min.js"></script>
 <script>if(typeof Lunar === 'undefined') document.write('<script src="https://unpkg.com/lunar-javascript/lunar.js"><\/script>');</script>
 <style>
@@ -1542,22 +1542,30 @@ const STAR_INFO = {
   9: { name:'九紫喜庆', cls:'star-good' },
 };
 
-function getMonthCenter(year, month) {
-  // 已知锚点：2026年4月入中数为6
-  // 每月减1，跨年连续
-  const anchorYear = 2026, anchorMonth = 4, anchorCenter = 6;
-  const monthsDiff = (year - anchorYear) * 12 + (month - anchorMonth);
-  // 每月减1，循环9
-  let center = ((anchorCenter - 1 - monthsDiff) % 9 + 9) % 9 + 1;
+function getMonthCenter(monthDZ) {
+  // 以节气月地支推入中数
+  // 锚点：壬辰月（辰月）= 6白入中
+  // 地支顺序：寅卯辰巳午未申酉戌亥子丑，对应月序1-12
+  // 辰月=3，锚点入中=6，每月减1
+  const DZ_ORDER = ['寅','卯','辰','巳','午','未','申','酉','戌','亥','子','丑'];
+  const anchorDZIdx = 2; // 辰 = index 2
+  const anchorCenter = 6;
+  const idx = DZ_ORDER.indexOf(monthDZ);
+  if (idx === -1) return 6; // 兜底
+  const diff = idx - anchorDZIdx;
+  let center = ((anchorCenter - 1 - diff) % 9 + 9) % 9 + 1;
   return center;
 }
 
 function renderJiugong() {
+  if (typeof Lunar === 'undefined') return;
   const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
+  const l = Lunar.fromDate(now);
 
-  const center = getMonthCenter(year, month);
+  // 取节气月地支（与月柱一致，按节气换月）
+  const monthGZ = l.getMonthInGanZhi();
+  const monthDZ = monthGZ[1];
+  const center = getMonthCenter(monthDZ);
 
   // 洛书顺飞：中、乾、兑、艮、离、坎、坤、震、巽
   // 对应位置索引（显示顺序：东南、正南、西南、正东、中、正西、东北、正北、西北）
@@ -1574,7 +1582,7 @@ function renderJiugong() {
   const displayOrder = ['东南','正南','西南','正东','中','正西','东北','正北','西北'];
   const posLabels = { '中':'中宫' };
 
-  document.getElementById('jiugong-title').textContent = `${year}年${month}月`;
+  document.getElementById('jiugong-title').textContent = `${monthGZ}月`;
 
   const grid = document.getElementById('jiugong-grid');
   grid.innerHTML = '';
