@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>般若日历</title>
+<title>有点玄 · 般若日历</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lunar-javascript/1.6.12/lunar.min.js"></script>
 <script>if(typeof Lunar === 'undefined') document.write('<script src="https://unpkg.com/lunar-javascript/lunar.js"><\/script>');</script>
 <style>
@@ -674,15 +674,10 @@
   <div id="major-alert-container"></div>
 
   <div class="card">
-    <div class="card-title"><span class="icon">🪐</span>当前主要行星状态</div>
+    <div class="card-title"><span class="icon">🪐</span>本月星象</div>
     <div class="planet-list" id="planet-list">
       <div class="loading-spinner"><div class="spin"></div> 加载星象数据...</div>
     </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title"><span class="icon">🗓</span>近期重大天象</div>
-    <div class="upcoming-events" id="upcoming-events"></div>
   </div>
 
   <div class="card">
@@ -690,10 +685,6 @@
     <div id="moon-phase-display"></div>
   </div>
 
-  <div class="card">
-    <div class="card-title"><span class="icon">💡</span>本周综合建议</div>
-    <div id="weekly-tips" style="font-size:0.82rem;line-height:1.9;color:var(--ink)"></div>
-  </div>
 </div>
 
 <!-- ===== 日历宜忌 PANEL ===== -->
@@ -1266,7 +1257,7 @@ function renderAstrology() {
     if (next) {
       const diffDays = Math.ceil((next.date - now) / 86400000);
       alertContainer.innerHTML = `
-        <div class="alert-banner" style="background:linear-gradient(135deg,var(--indigo),#1a2a4a)">
+        <div class="alert-banner" style="background:linear-gradient(135deg,var(--sky-dark),var(--sky-deep));color:white">
           <div class="alert-icon">${next.e}</div>
           <div class="alert-content">
             <div class="alert-title">即将到来（${diffDays}天后）：${next.t}</div>
@@ -1305,31 +1296,9 @@ function renderAstrology() {
     }).join('');
   }
 
-  // === 未来30天重大天象 ===
-  const evContainer = document.getElementById('upcoming-events');
-  const futureEvts = upcomingEvts.filter(e => e.date >= now).slice(0, 8);
-  if (futureEvts.length === 0) {
-    evContainer.innerHTML = `<div style="text-align:center;color:var(--mist);padding:16px;font-size:0.85rem">未来30天暂无重大天象记录</div>`;
-  } else {
-    evContainer.innerHTML = futureEvts.map(e => {
-      const d = e.date;
-      const dateStr = `${d.getMonth()+1}月${d.getDate()}日`;
-      return `
-        <div class="event-item">
-          <div class="event-date">${e.e}<br>${dateStr}</div>
-          <div>
-            <div class="event-desc">${e.t}</div>
-            <div class="event-impact">${e.tip}</div>
-          </div>
-        </div>`;
-    }).join('');
-  }
-
   // === 月相（基于 lunar-javascript）===
   renderMoonPhase(now);
 
-  // === 本月综合提示 ===
-  renderMonthlyTips(year, month, day);
 }
 
 function renderMoonPhase(now) {
@@ -1378,39 +1347,6 @@ function renderMoonPhase(now) {
     </div>`;
 }
 
-function renderMonthlyTips(year, month, day) {
-  // 找本月剩余的重要天象
-  const key = `${year}-${month}`;
-  const remaining = (AstroDB2026[key] || []).filter(e => e.d >= day);
-  const warnings = remaining.filter(e => e.tip.includes('⚠️'));
-  const highlights = remaining.filter(e => e.e === '🌟' || e.e === '🐉' || e.e === '🐲' || e.e === '⚡' || e.tip.includes('重磅') || e.tip.includes('历史'));
-
-  let html = '';
-
-  if (warnings.length > 0) {
-    html += `<div style="margin-bottom:10px">
-      <strong style="color:var(--vermillion)">⚠️ 本月需注意</strong><br>
-      ${warnings.map(e => `${month}月${e.d}日 ${e.t}：${e.tip.replace('⚠️','').trim()}`).join('<br>')}
-    </div>`;
-  }
-
-  if (highlights.length > 0) {
-    html += `<div style="margin-bottom:10px">
-      <strong style="color:var(--jade)">✨ 本月重大机遇</strong><br>
-      ${highlights.map(e => `${month}月${e.d}日 ${e.t}：${e.tip}`).join('<br>')}
-    </div>`;
-  }
-
-  if (remaining.length === 0) {
-    html += `<div style="color:var(--mist);font-size:0.82rem">本月剩余时间星象平稳，适合沉淀与整合。</div>`;
-  } else if (!warnings.length && !highlights.length) {
-    html += `<div style="font-size:0.82rem;line-height:1.8">
-      本月剩余共 <strong>${remaining.length}</strong> 个星象事件，整体能量平稳流动。专注当下目标，顺势而为。
-    </div>`;
-  }
-
-  document.getElementById('weekly-tips').innerHTML = html;
-}
 
 // ===== CALENDAR =====
 // 方位中文映射（与原版一致）
