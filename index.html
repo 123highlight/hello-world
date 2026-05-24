@@ -759,8 +759,9 @@
       <button class="mood-btn" onclick="selectMood('🥰')" title="感动">🥰</button>
     </div>
     <textarea class="diary-textarea" id="diary-input" placeholder="记下今天的心情与感悟..." rows="5"></textarea>
-    <div style="display:flex;gap:8px;margin-top:10px">
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
       <button class="save-btn" onclick="saveDiary()">保存随记</button>
+      <button class="export-btn" onclick="sendToObsidian()" style="background:#7c3aed">📓 写入 Obsidian</button>
       <button class="export-btn" onclick="exportDiary()">导出 TXT</button>
     </div>
   </div>
@@ -1779,6 +1780,65 @@ function saveDiary() {
   selectedMood = '';
   document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('selected'));
   renderDiaryList();
+}
+
+// 写入 Obsidian Vault（My-Vault/02-日记/）
+function sendToObsidian() {
+  const text = document.getElementById('diary-input').value.trim();
+  if (!text) { alert('请先写下你的心情～'); return; }
+
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  const timeStr = now.toLocaleTimeString('zh-CN', { hour:'2-digit', minute:'2-digit' });
+  const moodStr = selectedMood || '📝';
+
+  let baziLine = '';
+  if (typeof Lunar !== 'undefined') {
+    const bazi = getBaziForDate(now);
+    baziLine = `${bazi.year.tg}${bazi.year.dz}年 · ${bazi.month.tg}${bazi.month.dz}月 · ${bazi.day.tg}${bazi.day.dz}日 · ${bazi.hour.tg}${bazi.hour.dz}时`;
+  }
+
+  // Markdown 内容（带 frontmatter）
+  const mdContent = `---
+date: ${dateStr}
+time: ${timeStr}
+mood: ${moodStr}
+bazi: ${baziLine}
+tags: [日记, 般若日历]
+---
+
+# ${dateStr} 心情随记 ${moodStr}
+
+> ${baziLine}
+> 记录时间：${timeStr}
+
+${text}
+`;
+
+  // 构造 Obsidian URI
+  const vault = encodeURIComponent('Nami');
+  const filePath = encodeURIComponent(`My-Vault/02-日记/${dateStr}`);
+  const content = encodeURIComponent(mdContent);
+  const uri = `obsidian://new?vault=${vault}&file=${filePath}&content=${content}`;
+
+  // 检查 URL 长度（浏览器限制约 2000-8000 字符不等）
+  if (uri.length > 7500) {
+    // 超长：复制内容到剪贴板，跳转空白笔记
+    navigator.clipboard.writeText(mdContent).then(() => {
+      alert('日记内容较长，已复制到剪贴板。\n即将打开 Obsidian，请在新笔记中粘贴 (Cmd/Ctrl+V)。');
+      const fallbackUri = `obsidian://new?vault=${vault}&file=${filePath}`;
+      window.location.href = fallbackUri;
+    }).catch(() => {
+      alert('日记过长，且复制失败。请先用「导出 TXT」备份后手动操作。');
+    });
+    return;
+  }
+
+  // 同时保存到本地（确保不丢失）
+  saveDiary();
+
+  // 跳转 Obsidian
+  window.location.href = uri;
 }
 
 function renderDiaryList() {
