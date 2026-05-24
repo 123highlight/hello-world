@@ -739,13 +739,8 @@
   </div>
 
   <div class="card">
-    <div class="card-title"><span class="icon">📐</span>流月运势解析</div>
-    <div style="font-size:0.82rem;line-height:1.9;color:var(--ink)">
-      <p><strong style="color:var(--vermillion)">财运：</strong>4月六白武曲入中，正西八白财星得位，是本月财运最旺的方位，适合在此方向办公或摆放财位摆件。东北九紫喜庆，有喜事或意外收获的机会。注意东南五黄煞气，此方向避免大动土木或堆放杂物。</p><br>
-      <p><strong style="color:var(--jade)">事业：</strong>丙午年天机化权，配合六白武曲入中，决策力与执行力俱强。正南一白官星，仕途有贵人提携，适合争取升迁或向上级展示成果。西南三碧争斗需防合作纠纷，签约前务必仔细审查条款。</p><br>
-      <p><strong style="color:var(--indigo)">感情：</strong>廉贞化忌影响持续，正北二黑病符叠加，感情易生疲惫与误会。已有伴侣者宜多陪伴、少指责。东北九紫喜庆有利婚嫁喜事，有婚育计划者可把握此月。</p><br>
-      <p><strong style="color:var(--gold)">健康：</strong>东南五黄煞气较重，家中东南方宜悬挂六帝古钱或铜铃化解。正北二黑病符需注意肠胃和泌尿系统。西北七赤防意外破财与口舌，出行需谨慎。天同化禄带来福德之气，保持规律作息为健康之本。</p>
-    </div>
+    <div class="card-title"><span class="icon">📐</span>本月方位指南</div>
+    <div id="liuyue-display" style="font-size:0.82rem;line-height:1.8;color:var(--ink)"></div>
   </div>
 </div>
 
@@ -1609,15 +1604,134 @@ function renderJiugong() {
     div.innerHTML = `
       <div class="gong-num ${info.cls}">${num}</div>
       <div class="gong-name">${isCenter ? '中宫' : pos}</div>
-      <div style="font-size:0.55rem;color:var(--mist);margin-top:2px">${info.name}</div>
+      <div style="font-size:0.55rem;color:var(--stone);margin-top:2px">${info.name}</div>
     `;
     grid.appendChild(div);
   });
+
+  // 流月方位指南（根据本月飞星图自动生成）
+  renderLiuyue(starMap, monthGZ);
+}
+
+// ===== 流月方位指南（数据驱动）=====
+// 每颗飞星的吉凶属性、影响领域、建议
+const FLYSTAR_GUIDE = {
+  1: { type:'good',    name:'一白贪狼', area:'官运、桃花、文职', advice:'此方位旺事业仕途与人际，适合办公、社交、求贵人。可摆放圆形水景或蓝色物品助旺。' },
+  2: { type:'bad',     name:'二黑病符', area:'健康、肠胃、妇科', advice:'此方位主病气，需化解。家中此方向忌长期停留，可挂铜葫芦或六帝古钱化煞，避免摆放红色物品。' },
+  3: { type:'bad',     name:'三碧禄存', area:'口舌、官非、争斗', advice:'此方位主是非争吵，宜静不宜动。避免在此方向开会或激烈讨论，可摆放红色物品压制木气。' },
+  4: { type:'good',    name:'四绿文昌', area:'学业、考试、文书', advice:'此方位旺学业与文思，是本月最佳学习方位。书桌、孩童学习处宜设此方，可摆放绿色植物或文昌塔。' },
+  5: { type:'bad',     name:'五黄煞气', area:'重病、灾祸、意外', advice:'⚠️ 本月最凶方位！忌动土、装修、搬动家具。可挂六帝古钱或铜铃化解，避免在此方久坐。' },
+  6: { type:'neutral', name:'六白武曲', area:'权力、贵人、偏财', advice:'此方位主权势与偏财，适合领导决策、商务谈判。可摆放金属饰品或铜器助旺。' },
+  7: { type:'bad',     name:'七赤破军', area:'破财、口舌、意外', advice:'此方位主破财与意外，出行从此方向需谨慎。可摆放蓝色水景化解，避免金属尖锐物品。' },
+  8: { type:'good',    name:'八白财星', area:'正财、置业、储蓄', advice:'⭐ 本月最旺财位！适合摆放保险柜、收银台、聚宝盆。在此方向办公或理财效果最佳。' },
+  9: { type:'good',    name:'九紫喜庆', area:'喜事、婚姻、人缘', advice:'此方位主喜庆与人缘，有婚育、置业、签约计划者可在此方向推进。可摆放红色或紫色物品助旺。' },
+};
+
+// 流月运势分类（根据飞星功能聚合）
+const LIUYUE_CATEGORIES = [
+  { key:'财运',     color:'var(--sky-deep)',  stars:[8, 6, 1], label:'💰', desc:'与财富相关的方位' },
+  { key:'事业学业', color:'var(--sky-dark)',  stars:[4, 1, 6], label:'📈', desc:'与事业、学业相关的方位' },
+  { key:'感情人缘', color:'#a8729e',          stars:[9, 1],    label:'💕', desc:'与感情、人缘相关的方位' },
+  { key:'警示方位', color:'#9a5a7a',          stars:[5, 2, 7, 3], label:'⚠️', desc:'本月需特别留意的方位' },
+];
+
+function renderLiuyue(starMap, monthGZ) {
+  // 反查：每颗星在哪个方位
+  const starPos = {};
+  Object.entries(starMap).forEach(([pos, num]) => { starPos[num] = pos; });
+
+  const html = LIUYUE_CATEGORIES.map(cat => {
+    const lines = cat.stars.map(num => {
+      const pos = starPos[num];
+      if (!pos || pos === '中') return null; // 中宫不单独列方位
+      const info = FLYSTAR_GUIDE[num];
+      return `<div style="margin:4px 0 4px 0;padding-left:12px;border-left:2px solid ${cat.color};opacity:0.95">
+        <strong style="color:var(--ink)">${pos}（${info.name}）</strong>
+        <span style="color:var(--stone);font-size:0.75rem"> · ${info.area}</span><br>
+        <span style="font-size:0.78rem;color:var(--ink-soft);line-height:1.65">${info.advice}</span>
+      </div>`;
+    }).filter(Boolean).join('');
+
+    return `<div style="margin-bottom:14px">
+      <div style="font-weight:700;color:${cat.color};font-size:0.85rem;margin-bottom:6px;letter-spacing:0.04em">
+        ${cat.label} ${cat.key}
+      </div>
+      ${lines}
+    </div>`;
+  }).join('');
+
+  // 中宫信息
+  const centerNum = starMap['中'];
+  const centerInfo = FLYSTAR_GUIDE[centerNum];
+  const centerNote = `<div style="background:var(--sky-pale);border-radius:10px;padding:10px 12px;margin-top:6px;font-size:0.78rem;color:var(--sky-dark);line-height:1.65">
+    <strong>本月中宫：${centerInfo.name}</strong> · ${centerInfo.area}<br>
+    <span style="color:var(--ink-soft)">${centerInfo.advice}</span>
+  </div>`;
+
+  document.getElementById('liuyue-display').innerHTML = html + centerNote;
 }
 
 // ===== DIARY =====
 let selectedMood = '';
-let diaryEntries = JSON.parse(localStorage.getItem('diary_entries') || '[]');
+
+// 数据迁移：从原版 panna_j_* keys 迁移到新版 diary_entries 数组
+function migrateLegacyDiary() {
+  const existing = JSON.parse(localStorage.getItem('diary_entries') || '[]');
+  const existingIds = new Set(existing.map(e => e.id));
+  const migrated = [...existing];
+  let count = 0;
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith('panna_j_')) {
+      const dateStr = k.replace('panna_j_', ''); // 格式如 2024-12-25
+      const text = localStorage.getItem(k);
+      if (!text || !text.trim()) continue;
+
+      // 用日期当 ID 避免重复迁移
+      const id = `legacy_${dateStr}`;
+      if (existingIds.has(id)) continue;
+
+      // 解析日期
+      const [y, m, d] = dateStr.split('-').map(Number);
+      const date = new Date(y, m - 1, d);
+      const dateLabel = date.toLocaleDateString('zh-CN', { year:'numeric', month:'long', day:'numeric' });
+
+      let baziLabel = '';
+      if (typeof Lunar !== 'undefined') {
+        try {
+          const l = Lunar.fromDate(date);
+          baziLabel = `${l.getDayInGanZhi()}日（原版导入）`;
+        } catch(e) {}
+      }
+
+      migrated.push({
+        id,
+        date: dateLabel,
+        time: '',
+        bazi: baziLabel,
+        mood: '📖',
+        text
+      });
+      count++;
+    }
+  }
+
+  if (count > 0) {
+    // 按日期降序
+    migrated.sort((a, b) => {
+      const da = new Date(a.date.replace(/年|月/g,'-').replace('日',''));
+      const db = new Date(b.date.replace(/年|月/g,'-').replace('日',''));
+      return db - da;
+    });
+    localStorage.setItem('diary_entries', JSON.stringify(migrated));
+    console.log(`成功迁移 ${count} 条原版日记`);
+  }
+
+  return migrated;
+}
+
+let diaryEntries = migrateLegacyDiary();
 
 function initDiary() {
   const now = new Date();
