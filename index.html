@@ -788,11 +788,19 @@
     </div>
     <div class="settings-item">
       <div>
+        <div class="settings-label">检查旧版日记</div>
+        <div class="settings-sub">扫描本设备是否有原版日记数据</div>
+      </div>
+      <button class="export-btn" onclick="diagnoseDiary()">检查</button>
+    </div>
+    <div class="settings-item">
+      <div>
         <div class="settings-label">清除数据</div>
         <div class="settings-sub">删除本地储存的所有日记</div>
       </div>
-      <button class="export-btn" style="background:var(--vermillion)" onclick="clearData()">清除</button>
+      <button class="export-btn" style="background:#9a5a7a" onclick="clearData()">清除</button>
     </div>
+    <div id="diagnose-result" style="margin-top:10px"></div>
   </div>
   <div class="card">
     <div class="card-title"><span class="icon">🏠</span>工具</div>
@@ -1809,6 +1817,93 @@ function clearData() {
     diaryEntries = [];
     renderDiaryList();
   }
+}
+
+// 诊断：扫描 localStorage 找回旧版日记
+function diagnoseDiary() {
+  const resultEl = document.getElementById('diagnose-result');
+
+  // 1. 扫描所有 key
+  const allKeys = [];
+  const legacyKeys = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    allKeys.push(k);
+    if (k && k.startsWith('panna_j_')) legacyKeys.push(k);
+  }
+
+  const currentCount = diaryEntries.length;
+  const host = location.hostname;
+
+  // 2. 显示诊断结果
+  let html = `<div style="background:var(--bg2);border-radius:10px;padding:12px;font-size:0.78rem;line-height:1.7;color:var(--ink)">`;
+  html += `<div style="font-weight:700;margin-bottom:6px;color:var(--sky-deep)">📊 诊断结果</div>`;
+  html += `<div>当前网址：<span style="color:var(--sky-dark);font-family:monospace">${host}</span></div>`;
+  html += `<div>localStorage 总条数：<strong>${allKeys.length}</strong></div>`;
+  html += `<div>新版日记条数：<strong>${currentCount}</strong></div>`;
+  html += `<div>原版日记（panna_j_*）条数：<strong style="${legacyKeys.length>0?'color:#3a8a6a':'color:#9a5a7a'}">${legacyKeys.length}</strong></div>`;
+
+  if (legacyKeys.length > 0) {
+    html += `<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">`;
+    html += `<div style="color:#3a8a6a;font-weight:700;margin-bottom:6px">✅ 找到旧版日记！可以恢复。</div>`;
+    html += `<button class="export-btn" onclick="recoverLegacyDiary()" style="margin-right:6px">一键恢复</button>`;
+    html += `<button class="export-btn" onclick="exportLegacyRaw()" style="background:var(--sky)">导出原始数据</button>`;
+    html += `</div>`;
+  } else {
+    html += `<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);color:#9a5a7a">`;
+    html += `❌ 本网址下没有找到原版日记数据。<br><br>`;
+    html += `<strong>可能原因：</strong><br>`;
+    html += `1. 旧日记是在<strong>不同网址</strong>下写的（最常见）<br>`;
+    html += `2. 浏览器缓存被清除过<br>`;
+    html += `3. 隐私模式下写的日记，关闭后已丢失<br><br>`;
+    html += `<strong>建议：</strong>回想一下原来写日记时的网址，到那个网址再点这个「检查」按钮。`;
+    html += `</div>`;
+  }
+
+  // 3. 显示所有 key 列表（折叠）
+  if (allKeys.length > 0) {
+    html += `<details style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)"><summary style="cursor:pointer;color:var(--stone);font-size:0.72rem">查看本设备所有存储 key（${allKeys.length}）</summary>`;
+    html += `<div style="font-family:monospace;font-size:0.7rem;color:var(--stone);margin-top:6px;word-break:break-all">${allKeys.join('<br>')}</div>`;
+    html += `</details>`;
+  }
+
+  html += `</div>`;
+  resultEl.innerHTML = html;
+}
+
+// 一键恢复：把扫描到的 panna_j_* 数据迁移到 diary_entries
+function recoverLegacyDiary() {
+  diaryEntries = migrateLegacyDiary();
+  renderDiaryList();
+  alert(`恢复完成！当前共有 ${diaryEntries.length} 条日记。请切换到「心情随记」页面查看。`);
+  diagnoseDiary(); // 刷新诊断显示
+}
+
+// 导出原始 panna_j_* 数据为文本
+function exportLegacyRaw() {
+  let txt = '【原版日记原始数据导出】\n\n';
+  const items = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith('panna_j_')) {
+      const dateStr = k.replace('panna_j_', '');
+      const text = localStorage.getItem(k);
+      items.push({ dateStr, text });
+    }
+  }
+  items.sort((a, b) => {
+    const da = new Date(a.dateStr); const db = new Date(b.dateStr);
+    return db - da;
+  });
+  items.forEach(it => {
+    txt += `[${it.dateStr}]\n${it.text}\n\n${'─'.repeat(30)}\n\n`;
+  });
+
+  const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `原版日记备份_${new Date().toLocaleDateString('zh-CN')}.txt`;
+  a.click();
 }
 
 // ===== CLOCK =====
