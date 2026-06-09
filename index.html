@@ -872,7 +872,7 @@ const I18N = {
   appTitle:        { zh: '般若日历', en: 'Panna Almanac' },
   appSubtitle:     { zh: 'PANNA ALMANAC', en: 'WISDOM CALENDAR' },
   tzDetecting:     { zh: '⏳ 检测时区...', en: '⏳ Detecting timezone...' },
-  tabBazi:         { zh: '🪬 活在当下', en: '🪬 Now' },
+  tabBazi:         { zh: '🪬 活在当下', en: '🪬 Be Here Now' },
   tabAstro:        { zh: '🔭 星象天机', en: '🔭 Astrology' },
   tabCalendar:     { zh: '📅 日历宜忌', en: '📅 Calendar' },
   tabZiwei:        { zh: '☯ 紫微四化', en: '☯ Zǐ Wēi' },
@@ -1936,15 +1936,24 @@ function renderZiwei() {
 // 洛书顺飞路径：中→乾(西北)→兑(正西)→艮(东北)→离(正南)→坎(正北)→坤(西南)→震(正东)→巽(东南)
 
 const STAR_INFO = {
-  1: { name:{zh:'一白官星',en:'1 White · Career'},  cls:'star-good' },
-  2: { name:{zh:'二黑病符',en:'2 Black · Illness'}, cls:'star-bad' },
-  3: { name:{zh:'三碧争斗',en:'3 Jade · Conflict'}, cls:'star-bad' },
-  4: { name:{zh:'四绿文昌',en:'4 Green · Scholar'}, cls:'star-good' },
-  5: { name:{zh:'五黄煞气',en:'5 Yellow · Calamity'},cls:'star-bad' },
-  6: { name:{zh:'六白武曲',en:'6 White · Authority'},cls:'star-neutral' },
-  7: { name:{zh:'七赤破军',en:'7 Red · Loss'},      cls:'star-bad' },
-  8: { name:{zh:'八白财星',en:'8 White · Wealth'},  cls:'star-good' },
-  9: { name:{zh:'九紫喜庆',en:'9 Purple · Joy'},    cls:'star-good' },
+  1: { name:{zh:'一白官星',en:'1 White · Career'},  cls:'star-good',
+       color:{ bg:'#e6f0f8', dark:'#3a7aaa', border:'rgba(58,122,170,0.35)' } },     // 一白：白带浅蓝
+  2: { name:{zh:'二黑病符',en:'2 Black · Illness'}, cls:'star-bad',
+       color:{ bg:'#d8d8dc', dark:'#3a3a42', border:'rgba(40,40,50,0.35)' } },        // 二黑：浅灰
+  3: { name:{zh:'三碧争斗',en:'3 Jade · Conflict'}, cls:'star-bad',
+       color:{ bg:'#cfe6dc', dark:'#2a7a5c', border:'rgba(42,122,92,0.35)' } },       // 三碧：青碧
+  4: { name:{zh:'四绿文昌',en:'4 Green · Scholar'}, cls:'star-good',
+       color:{ bg:'#d4ebcf', dark:'#3a7a3c', border:'rgba(58,122,60,0.35)' } },       // 四绿：草绿
+  5: { name:{zh:'五黄煞气',en:'5 Yellow · Calamity'},cls:'star-bad',
+       color:{ bg:'#fae8a8', dark:'#8a6a1a', border:'rgba(192,144,40,0.5)' } },       // 五黄：明黄（警示）
+  6: { name:{zh:'六白武曲',en:'6 White · Authority'},cls:'star-neutral',
+       color:{ bg:'#eef0f2', dark:'#5a6a78', border:'rgba(90,106,120,0.35)' } },      // 六白：银白
+  7: { name:{zh:'七赤破军',en:'7 Red · Loss'},      cls:'star-bad',
+       color:{ bg:'#f5d4d4', dark:'#9a3a3a', border:'rgba(154,58,58,0.35)' } },       // 七赤：朱赤
+  8: { name:{zh:'八白财星',en:'8 White · Wealth'},  cls:'star-good',
+       color:{ bg:'#f7e8c2', dark:'#9a7a2a', border:'rgba(192,154,58,0.45)' } },      // 八白：金白
+  9: { name:{zh:'九紫喜庆',en:'9 Purple · Joy'},    cls:'star-good',
+       color:{ bg:'#e3d6ee', dark:'#7a4a9a', border:'rgba(122,74,154,0.35)' } },      // 九紫：紫
 };
 function starName(num) {
   const e = STAR_INFO[num];
@@ -1998,10 +2007,15 @@ function renderJiugong() {
     const num = starMap[pos];
     const info = STAR_INFO[num];
     const isCenter = pos === '中';
+    const c = info.color;
     const div = document.createElement('div');
     div.className = 'gong-cell' + (isCenter ? ' zhonggong' : '');
+    // Inline style overrides default — each cell takes on the color of the star flying into it
+    div.style.background = c.bg;
+    div.style.borderColor = c.border;
+    if (isCenter) div.style.boxShadow = `inset 0 0 0 2px ${c.border}`;
     div.innerHTML = `
-      <div class="gong-num ${info.cls}">${num}</div>
+      <div class="gong-num" style="color:${c.dark};font-size:1.3rem;font-weight:400;font-family:'ZCOOL KuaiLe',serif">${num}</div>
       <div class="gong-name">${isCenter ? t('zhonggong') : dirName(pos)}</div>
       <div style="font-size:0.55rem;color:var(--stone);margin-top:2px">${starName(num)}</div>
     `;
