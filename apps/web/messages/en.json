@@ -1,0 +1,30 @@
+{
+  "Navigation": {
+    "title": "Calendar",
+    "month": "Month",
+    "day": "Day"
+  },
+  "LocaleSwitcher": {
+    "label": "Language"
+  },
+  "MonthPage": {
+    "title": "Month overview",
+    "lead": "Select a month to preview upcoming calendar slots.",
+    "cta": "Choose month",
+    "selected": "Currently viewing {value}",
+    "placeholderHeading": "Example highlights",
+    "exampleOne": "Recurring meetings to plan around",
+    "exampleTwo": "Holidays synced from your workspace",
+    "exampleThree": "Personal reminders and focus time"
+  },
+  "DayPage": {
+    "title": "Day overview",
+    "lead": "Pick a day to review its sample schedule.",
+    "cta": "Choose day",
+    "selected": "Currently viewing {value}",
+    "placeholderHeading": "Sample agenda",
+    "exampleOne": "Morning focus block",
+    "exampleTwo": "Team stand-up and syncs",
+    "exampleThree": "Wrap-up notes and follow-ups"
+  }
+}
