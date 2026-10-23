@@ -1778,6 +1778,13 @@ function isJinShen(l) {
   return JINSHEN_ZHI[l.getYearGanByLiChun()].includes(l.getDayZhi());
 }
 
+// 大偷修日（凶神朝天）：8 个干支日；若同日是红煞日或金神七煞日则排除
+// ponytail: 2026 年沿用 JiRi2026 里的原始数据，2027 年起按此规则计算
+const DA_TOUXIU = ['壬子', '癸丑', '丙辰', '丁巳', '戊午', '己未', '庚申', '辛酉'];
+function isTouXiu(l, solarYear) {
+  return DA_TOUXIU.includes(l.getDayInGanZhi()) && !isHongSha(l, solarYear) && !isJinShen(l);
+}
+
 let calYear = new Date().getFullYear();
 let calMonth = new Date().getMonth();
 
@@ -1841,6 +1848,8 @@ function renderCalendar() {
         const dispLabel = EN ? JIRI_EN[label] : label;
         jiTag = `<div class="tag-ji ${label === '偷修' ? 'tou' : ''}">${dispLabel}</div>`;
       }
+    } else if (calYear > 2026 && calYear <= HONGSHA_UNTIL_YEAR && isTouXiu(l, calYear)) {
+      jiTag = `<div class="tag-ji tou">${EN ? JIRI_EN['偷修'] : '偷修'}</div>`;
     }
 
     const jsTag = isJinShen(l) ? `<div class="tag-jinshen">${EN ? 'Jinshen' : '金神'}</div>` : '';
