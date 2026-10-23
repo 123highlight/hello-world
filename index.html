@@ -496,6 +496,7 @@
   .tag-qisha { background: #8a8f96; }
   .qisha-note { color: #7a8088; font-weight: 700; }
   .hongsha-note { color: #d6342c; font-weight: 700; }
+  .gz-notes { margin-top: 4px; font-size: 0.78rem; letter-spacing: 0.08em; }
   .cal-day.hongsha .solar-day { color: #d6342c; }
   .cal-day.today.hongsha .solar-day { color: #fff; }
 
@@ -2280,13 +2281,15 @@ function renderDailyDetail(date) {
   const EN = currentLang === 'en';
 
   // 年月日干支 — 干支字符保留中文，标签改语言
-  const hsNote = isHongSha(l, date.getFullYear())
-    ? ` <span class="hongsha-note">${EN ? '· Red Sha Day' : '· 红煞日'}</span>` : '';
-  const jsNote = isJinShen(l)
-    ? ` <span class="qisha-note">${EN ? '· Jinshen Qisha Day' : '· 金神七煞日'}</span>` : '';
+  // 干支一行；红煞日 / 金神七煞日另起一行
+  const notes = [
+    isHongSha(l, date.getFullYear()) ? `<span class="hongsha-note">${EN ? 'Red Sha Day' : '红煞日'}</span>` : '',
+    isJinShen(l) ? `<span class="qisha-note">${EN ? 'Jinshen Qisha Day' : '金神七煞日'}</span>` : '',
+  ].filter(Boolean).join('　');
   document.getElementById('ganzhi-display').innerHTML = (EN
     ? `Y ${l.getYearInGanZhi()} · M ${l.getMonthInGanZhi()} · D ${l.getDayInGanZhi()}`
-    : `${l.getYearInGanZhi()}年　${l.getMonthInGanZhi()}月　${l.getDayInGanZhi()}日`) + hsNote + jsNote;
+    : `${l.getYearInGanZhi()}年　${l.getMonthInGanZhi()}月　${l.getDayInGanZhi()}日`)
+    + (notes ? `<div class="gz-notes">${notes}</div>` : '');
 
   // 宜忌
   const yi = l.getDayYi().filter(x => ModernEvents.includes(x));
