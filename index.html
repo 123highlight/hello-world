@@ -2143,7 +2143,7 @@ const YI_JI_EN = {
   '出行':'Travel','纳财':'Receive Money','入宅':'Move In','嫁娶':'Marriage','交易':'Trade',
   '会友':'Meet Friends','签约':'Sign','装修':'Renovate','搬家':'Move','祈福':'Pray',
   '开市':'Open Market','动土':'Break Ground','置产':'Acquire Property','安床':'Set Bed',
-  '理发':'Haircut','求医':'Seek Medical','平':'Neutral'
+  '理发':'Haircut','求医':'Seek Medical','平':'Neutral','诸事不宜':'Nothing Auspicious','无':'None'
 };
 function yiJiLabel(zh) { return currentLang === 'en' ? (YI_JI_EN[zh] || zh) : zh; }
 
@@ -2292,8 +2292,16 @@ function renderDailyDetail(date) {
     + (notes ? `<div class="gz-notes">${notes}</div>` : '');
 
   // 宜忌
-  const yi = l.getDayYi().filter(x => ModernEvents.includes(x));
-  const ji = l.getDayJi().filter(x => ModernEvents.includes(x));
+  // 库里的传统写法 → 现代说法；诸事不宜、"忌：无"照实显示
+  const MODERN_ALIAS = { '会亲友': '会友', '立券': '签约', '修造': '装修', '移徙': '搬家' };
+  const pickYiJi = (list) => {
+    const all = list.map(x => MODERN_ALIAS[x] || x);
+    const special = ['诸事不宜', '无'].filter(x => all.includes(x));
+    const items = all.filter(x => ModernEvents.includes(x));
+    return special.concat(items);
+  };
+  const yi = pickYiJi(l.getDayYi());
+  const ji = pickYiJi(l.getDayJi());
 
   document.getElementById('yi-display').innerHTML =
     (yi.length ? yi : ['平']).map(y => `<span class="yi-ji-tag yi-tag">${yiJiLabel(y)}</span>`).join('');
@@ -2310,7 +2318,7 @@ function renderDailyDetail(date) {
   document.getElementById('dir-display').innerHTML = `
     <div class="dir-item"><div class="dir-name">${labels.cai}</div><div class="dir-val">${mapDir(l.getDayPositionCai())}</div></div>
     <div class="dir-item"><div class="dir-name">${labels.xi}</div><div class="dir-val">${mapDir(l.getDayPositionXi())}</div></div>
-    <div class="dir-item"><div class="dir-name">${labels.fu}</div><div class="dir-val">${mapDir(l.getDayPositionFu())}</div></div>
+    <div class="dir-item"><div class="dir-name">${labels.fu}</div><div class="dir-val">${mapDir(l.getDayPositionFu(1))}</div></div>
     <div class="dir-item"><div class="dir-name">${labels.chong}/${labels.sha}</div><div class="dir-val">${labels.chong} ${l.getDayChongDesc()} · ${labels.sha} ${mapDir(l.getDaySha())}</div></div>
   `;
 }
