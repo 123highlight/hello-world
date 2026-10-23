@@ -457,11 +457,11 @@
     color: var(--ink-soft); padding: 4px 0; letter-spacing: 0.04em; font-weight: 700;
   }
   .cal-day {
-    aspect-ratio: 1;
+    min-height: 58px; /* 为底部标记留出位置：日期、农历、标记竖向排列，互不遮挡 */
     display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
+    align-items: center; justify-content: flex-start;
     border-radius: 10px; cursor: pointer;
-    font-size: 0.8rem; padding: 4px 2px;
+    font-size: 0.8rem; padding: 6px 1px 3px;
     transition: all 0.18s; position: relative;
   }
   /* 有标记的格子：吉/偷修为积极色，红煞/七煞为消极色（须在 hover/today 之前，让后两者能覆盖） */
@@ -482,7 +482,7 @@
     background: var(--sky-light); position: absolute; bottom: 3px;
   }
   .cal-tags {
-    position: absolute; bottom: 2px; left: 0; right: 0;
+    margin-top: auto; padding-top: 2px; width: 100%;
     display: flex; flex-wrap: wrap; justify-content: center; gap: 1px;
   }
   .cal-tags > div {
@@ -496,6 +496,7 @@
   .tag-qisha { background: #8a8f96; }
   .qisha-note { color: #7a8088; font-weight: 700; }
   .hongsha-note { color: #d6342c; font-weight: 700; }
+  .gz-notes { margin-top: 4px; font-size: 0.78rem; letter-spacing: 0.08em; }
   .cal-day.hongsha .solar-day { color: #d6342c; }
   .cal-day.today.hongsha .solar-day { color: #fff; }
 
@@ -2142,7 +2143,7 @@ const YI_JI_EN = {
   '出行':'Travel','纳财':'Receive Money','入宅':'Move In','嫁娶':'Marriage','交易':'Trade',
   '会友':'Meet Friends','签约':'Sign','装修':'Renovate','搬家':'Move','祈福':'Pray',
   '开市':'Open Market','动土':'Break Ground','置产':'Acquire Property','安床':'Set Bed',
-  '理发':'Haircut','求医':'Seek Medical','平':'Neutral'
+  '理发':'Haircut','求医':'Seek Medical','平':'Neutral','诸事不宜':'Nothing Auspicious','无':'None'
 };
 function yiJiLabel(zh) { return currentLang === 'en' ? (YI_JI_EN[zh] || zh) : zh; }
 
@@ -2280,17 +2281,27 @@ function renderDailyDetail(date) {
   const EN = currentLang === 'en';
 
   // 年月日干支 — 干支字符保留中文，标签改语言
-  const hsNote = isHongSha(l, date.getFullYear())
-    ? ` <span class="hongsha-note">${EN ? '· Red Sha Day' : '· 红煞日'}</span>` : '';
-  const jsNote = isJinShen(l)
-    ? ` <span class="qisha-note">${EN ? '· Jinshen Qisha Day' : '· 金神七煞日'}</span>` : '';
+  // 干支一行；红煞日 / 金神七煞日另起一行
+  const notes = [
+    isHongSha(l, date.getFullYear()) ? `<span class="hongsha-note">${EN ? 'Red Sha Day' : '红煞日'}</span>` : '',
+    isJinShen(l) ? `<span class="qisha-note">${EN ? 'Jinshen Qisha Day' : '金神七煞日'}</span>` : '',
+  ].filter(Boolean).join('　');
   document.getElementById('ganzhi-display').innerHTML = (EN
     ? `Y ${l.getYearInGanZhi()} · M ${l.getMonthInGanZhi()} · D ${l.getDayInGanZhi()}`
-    : `${l.getYearInGanZhi()}年　${l.getMonthInGanZhi()}月　${l.getDayInGanZhi()}日`) + hsNote + jsNote;
+    : `${l.getYearInGanZhi()}年　${l.getMonthInGanZhi()}月　${l.getDayInGanZhi()}日`)
+    + (notes ? `<div class="gz-notes">${notes}</div>` : '');
 
   // 宜忌
-  const yi = l.getDayYi().filter(x => ModernEvents.includes(x));
-  const ji = l.getDayJi().filter(x => ModernEvents.includes(x));
+  // 库里的传统写法 → 现代说法；诸事不宜、"忌：无"照实显示
+  const MODERN_ALIAS = { '会亲友': '会友', '立券': '签约', '修造': '装修', '移徙': '搬家' };
+  const pickYiJi = (list) => {
+    const all = list.map(x => MODERN_ALIAS[x] || x);
+    const special = ['诸事不宜', '无'].filter(x => all.includes(x));
+    const items = all.filter(x => ModernEvents.includes(x));
+    return special.concat(items);
+  };
+  const yi = pickYiJi(l.getDayYi());
+  const ji = pickYiJi(l.getDayJi());
 
   document.getElementById('yi-display').innerHTML =
     (yi.length ? yi : ['平']).map(y => `<span class="yi-ji-tag yi-tag">${yiJiLabel(y)}</span>`).join('');
@@ -2307,7 +2318,7 @@ function renderDailyDetail(date) {
   document.getElementById('dir-display').innerHTML = `
     <div class="dir-item"><div class="dir-name">${labels.cai}</div><div class="dir-val">${mapDir(l.getDayPositionCai())}</div></div>
     <div class="dir-item"><div class="dir-name">${labels.xi}</div><div class="dir-val">${mapDir(l.getDayPositionXi())}</div></div>
-    <div class="dir-item"><div class="dir-name">${labels.fu}</div><div class="dir-val">${mapDir(l.getDayPositionFu())}</div></div>
+    <div class="dir-item"><div class="dir-name">${labels.fu}</div><div class="dir-val">${mapDir(l.getDayPositionFu(1))}</div></div>
     <div class="dir-item"><div class="dir-name">${labels.chong}/${labels.sha}</div><div class="dir-val">${labels.chong} ${l.getDayChongDesc()} · ${labels.sha} ${mapDir(l.getDaySha())}</div></div>
   `;
 }
