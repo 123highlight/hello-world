@@ -493,6 +493,12 @@
     font-size: 0.44rem; background: #d6342c; color: #fff;
     padding: 0 3px; border-radius: 3px; line-height: 1.5;
   }
+  .tag-jinshen {
+    position: absolute; top: 2px; left: 2px;
+    font-size: 0.44rem; background: #8a8f96; color: #fff;
+    padding: 0 3px; border-radius: 3px; line-height: 1.5;
+  }
+  .jinshen-note { color: #7a8088; font-weight: 700; }
   .cal-day.hongsha .solar-day { color: #d6342c; }
   .cal-day.today.hongsha .solar-day { color: #fff; }
   .hongsha-note { color: #d6342c; font-weight: 700; }
@@ -1754,13 +1760,22 @@ const JiRi2026 = {
 
 const JIRI_EN = { '吉':'Ji', '偷修':'Repair' };
 
-// 红煞日：农历孟月(1,4,7,10)逢酉、仲月(2,5,8,11)逢巳、季月(3,6,9,12)逢丑
-// ponytail: 只标到 HONGSHA_UNTIL_YEAR（阳历年），要延长改这个数；闰月按本月同号处理
+// 红煞日：节气月(寅月=1…丑月=12)孟月(1,4,7,10)逢酉、仲月(2,5,8,11)逢巳、季月(3,6,9,12)逢丑
+// 节气月不分闰月，天然按同月处理
+// ponytail: 只标到 HONGSHA_UNTIL_YEAR（阳历年），要延长改这个数
 const HONGSHA_UNTIL_YEAR = 2030;
+const ZHI12 = '子丑寅卯辰巳午未申酉戌亥';
 function isHongSha(l, solarYear) {
   if (solarYear > HONGSHA_UNTIL_YEAR) return false;
-  const zhi = ['酉', '巳', '丑'][(Math.abs(l.getMonth()) + 2) % 3];
-  return l.getDayZhi() === zhi;
+  const m = (ZHI12.indexOf(l.getMonthZhi()) + 10) % 12 + 1;
+  return l.getDayZhi() === ['酉', '巳', '丑'][(m + 2) % 3];
+}
+
+// 金神七煞日：甲己年午未、乙庚年辰巳、丙辛年子丑寅卯、丁壬年戌亥、戊癸年申酉（年干按立春换年）
+const JINSHEN_ZHI = { '甲':'午未', '己':'午未', '乙':'辰巳', '庚':'辰巳', '丙':'子丑寅卯', '辛':'子丑寅卯',
+                      '丁':'戌亥', '壬':'戌亥', '戊':'申酉', '癸':'申酉' };
+function isJinShen(l) {
+  return JINSHEN_ZHI[l.getYearGanByLiChun()].includes(l.getDayZhi());
 }
 
 let calYear = new Date().getFullYear();
@@ -1828,8 +1843,9 @@ function renderCalendar() {
       }
     }
 
+    const jsTag = isJinShen(l) ? `<div class="tag-jinshen">${EN ? 'Jinshen' : '金神'}</div>` : '';
     const hsTag = hs ? `<div class="tag-hongsha">${EN ? 'Red Sha' : '红煞'}</div>` : '';
-    cell.innerHTML = `<div class="solar-day">${i}</div><div class="lunar-day">${subTxt}</div>${chuTag}${jiTag}${hsTag}`;
+    cell.innerHTML = `<div class="solar-day">${i}</div><div class="lunar-day">${subTxt}</div>${chuTag}${jiTag}${hsTag}${jsTag}`;
     cell.onclick = () => renderDailyDetail(d);
     grid.appendChild(cell);
   }
@@ -1846,9 +1862,11 @@ function renderDailyDetail(date) {
   // 年月日干支 — 干支字符保留中文，标签改语言
   const hsNote = isHongSha(l, date.getFullYear())
     ? ` <span class="hongsha-note">${EN ? '· Red Sha Day' : '· 红煞日'}</span>` : '';
+  const jsNote = isJinShen(l)
+    ? ` <span class="jinshen-note">${EN ? '· Jinshen Qisha Day' : '· 金神七煞日'}</span>` : '';
   document.getElementById('ganzhi-display').innerHTML = (EN
     ? `Y ${l.getYearInGanZhi()} · M ${l.getMonthInGanZhi()} · D ${l.getDayInGanZhi()}`
-    : `${l.getYearInGanZhi()}年　${l.getMonthInGanZhi()}月　${l.getDayInGanZhi()}日`) + hsNote;
+    : `${l.getYearInGanZhi()}年　${l.getMonthInGanZhi()}月　${l.getDayInGanZhi()}日`) + hsNote + jsNote;
 
   // 宜忌
   const yi = l.getDayYi().filter(x => ModernEvents.includes(x));
