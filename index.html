@@ -498,14 +498,6 @@
   .cal-day.hongsha .solar-day { color: #d6342c; }
   .cal-day.today.hongsha .solar-day { color: #fff; }
 
-  .astro-dot {
-    position: absolute; top: 2px; right: 3px;
-    font-size: 0.6rem; line-height: 1; color: #5b4bd6;
-  }
-  .cal-day.today .astro-dot { color: #fff; }
-  .astro-row { font-size: 0.8rem; line-height: 1.55; padding: 2px 0; }
-  .astro-date { display: inline-block; min-width: 6.2em; margin-right: 6px; color: #5b4bd6; font-weight: 700; font-variant-numeric: tabular-nums; }
-
   /* Daily detail */
   .daily-detail {
     margin-top: 12px;
@@ -750,11 +742,6 @@
     <div class="cal-grid" id="cal-grid"></div>
   </div>
 
-  <div class="detail-box" id="astro-card" style="display:none;margin-bottom:10px">
-    <div class="detail-box-title" id="astro-title"></div>
-    <div id="astro-list"></div>
-  </div>
-
   <div id="ganzhi-bar" style="background:white;border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 1px 6px var(--shadow)">
     <div style="font-size:0.65rem;color:var(--mist);letter-spacing:0.1em;white-space:nowrap" data-i18n="ganzhiLabel">干支</div>
     <div id="ganzhi-display" style="font-family:'ZCOOL KuaiLe',sans-serif;font-size:1rem;font-weight:600;color:var(--ink);letter-spacing:0.15em;text-align:center"></div>
@@ -974,9 +961,9 @@ const I18N = {
   monthPeaceful:   { zh: '本月星象平稳', en: 'A calm month astrologically' },
   past:            { zh: '已过', en: 'past' },
   today:           { zh: '今日', en: 'today' },
-  astroOutOfRange: { zh: '星象数据库覆盖2026年', en: 'Astrology database covers 2026 only' },
+  astroOutOfRange: { zh: '星象数据库覆盖2026–2027年', en: 'Astrology database covers 2026–2027 only' },
   astroOutOfRangeTip:{ zh: '当前日期超出数据范围，星象事件列表暂无显示。', en: 'Current date is outside the database range.' },
-  astroDataOnly2026:{ zh: '星象数据仅覆盖2026年', en: 'Astrology data covers 2026 only' },
+  astroDataOnly2026:{ zh: '星象数据仅覆盖2026–2027年', en: 'Astrology data covers 2026–2027 only' },
   lunarMonthLabel: { zh: '农历', en: 'Lunar' },
   energyTheme:     { zh: '能量主题', en: 'Theme' },
   yearSihua:       { zh: '流年四化', en: 'Annual Sihua' },
@@ -1560,6 +1547,90 @@ const AstroDB2026 = {
   ]
 };
 
+// 2027 年：由 astronomy-engine 逐项计算（日月食、水星等逆行/顺行、冲日、合日、木星入处女座、火星与外行星相位、金星合相）
+// 日期沿用上面 2026 数据的口径（美国太平洋时间）；星座度数为回归黄道（西方占星）
+const AstroDB2027 = {
+  "2027-1": [
+    { d:1, e:"☀️", t:{zh:"水星合日（摩羯11°）", en:"Mercury conjunct the Sun (Capricorn 11°)"}, tip:{zh:"水星与太阳合，沟通与合约主题进入新周期的起点，宜低调酝酿，静待显现。", en:"Mercury conjoins the Sun — themes of communication and contracts reach the start of a new cycle; incubate quietly and let it surface."} },
+    { d:10, e:"⬅️", t:{zh:"火星逆行开始（处女10°）", en:"Mars retrograde begins (Virgo 10°)"}, tip:{zh:"火星逆行至4月1日，行动力内收，避免冒进与正面冲突，宜复盘计划。", en:"Mars retrograde runs through Apr 1. Drive turns inward — avoid rushing and head-on conflict; good for reviewing plans."} },
+    { d:25, e:"☀️", t:{zh:"冥王星合日（水瓶5°）", en:"Pluto conjunct the Sun (Aquarius 5°)"}, tip:{zh:"冥王星与太阳合，权力与蜕变主题进入新周期的起点，宜低调酝酿，静待显现。", en:"Pluto conjoins the Sun — themes of power and transformation reach the start of a new cycle; incubate quietly and let it surface."} }
+  ],
+  "2027-2": [
+    { d:6, e:"🐉", t:{zh:"日环食（水瓶17°）", en:"Annular Solar Eclipse (Aquarius 17°)"}, tip:{zh:"水瓶座日环食开启约半年的命运窗口，科技、社群与群体意识的旧模式被清理，新方向随后逐步显现。", en:"The Aquarius annular solar eclipse opens a roughly six-month destiny window — old patterns in technology, community, and collective consciousness are cleared and new directions emerge."} },
+    { d:8, e:"✅", t:{zh:"天王星结束逆行，恢复顺行（双子1°）", en:"Uranus stations direct (Gemini 1°)"}, tip:{zh:"天王星所主的突变与创新重新向前推进，逆行期间复盘的结论可以付诸实践。", en:"Uranus's themes of sudden change and innovation move forward again — lessons from the retrograde can be put into practice."} },
+    { d:9, e:"⬅️", t:{zh:"水星逆行开始（双鱼5°）", en:"Mercury retrograde begins (Pisces 5°)"}, tip:{zh:"水星逆行至3月3日，避免重大签约，注意沟通误解，适合回顾整理。", en:"Mercury retrograde runs through Mar 3. Avoid major signings; expect miscommunication; good for review and integration."} },
+    { d:10, e:"🌐", t:{zh:"木星冲日（狮子22°）", en:"Jupiter at opposition to the Sun (Leo 22°)"}, tip:{zh:"木星冲日，扩张与机遇主题达到年度高峰，相关事务趋于明朗，也需留意过度。", en:"Jupiter opposes the Sun — themes of expansion and opportunity peak for the year and become clearer; watch for excess."} },
+    { d:18, e:"☀️", t:{zh:"水星逆行合日（水瓶29°）", en:"Mercury retrograde conjunct the Sun (Aquarius 29°)"}, tip:{zh:"水星与太阳合，沟通与合约主题进入新周期的起点，宜低调酝酿，静待显现。", en:"Mercury conjoins the Sun — themes of communication and contracts reach the start of a new cycle; incubate quietly and let it surface."} },
+    { d:19, e:"🌐", t:{zh:"火星冲日（处女0°）", en:"Mars at opposition to the Sun (Virgo 0°)"}, tip:{zh:"火星冲日，行动力与冲突主题达到年度高峰，相关事务趋于明朗，也需留意过度。", en:"Mars opposes the Sun — themes of drive and conflict peak for the year and become clearer; watch for excess."} },
+    { d:20, e:"🐲", t:{zh:"半影月食（处女1°）", en:"Penumbral Lunar Eclipse (Virgo 1°)"}, tip:{zh:"半影月食，影响较温和。处女座主题：健康、工作与日常习惯，适合做轻量的整理与释放。", en:"A penumbral lunar eclipse — a mild one. Virgo themes: health, work, and daily routines; good for light clearing and release."} }
+  ],
+  "2027-3": [
+    { d:3, e:"✅", t:{zh:"水星结束逆行，恢复顺行（水瓶20°）", en:"Mercury stations direct (Aquarius 20°)"}, tip:{zh:"沟通与计划重回正轨，之前搁置的事项可以重新推进。", en:"Communication and plans return to track; previously paused matters can resume."} },
+    { d:6, e:"💫", t:{zh:"金星合相冥王星（水瓶6°）", en:"Venus conjunct Pluto (Aquarius 6°)"}, tip:{zh:"金星与冥王星的能量合而为一，感情与财运与权力与蜕变的议题被集中放大，是启动或收尾的节点。", en:"Venus and Pluto fuse — themes of love and finances and power and transformation are magnified; a point to begin or conclude."} },
+    { d:24, e:"☀️", t:{zh:"海王星合日（白羊4°）", en:"Neptune conjunct the Sun (Aries 4°)"}, tip:{zh:"海王星与太阳合，灵感与幻象主题进入新周期的起点，宜低调酝酿，静待显现。", en:"Neptune conjoins the Sun — themes of inspiration and illusion reach the start of a new cycle; incubate quietly and let it surface."} }
+  ],
+  "2027-4": [
+    { d:1, e:"✅", t:{zh:"火星结束逆行，恢复顺行（狮子20°）", en:"Mars stations direct (Leo 20°)"}, tip:{zh:"行动力恢复前行，被拖延的计划可以重新发力。", en:"Drive moves forward again — delayed plans can be pushed anew."} },
+    { d:7, e:"☀️", t:{zh:"土星合日（白羊17°）", en:"Saturn conjunct the Sun (Aries 17°)"}, tip:{zh:"土星与太阳合，结构与责任主题进入新周期的起点，宜低调酝酿，静待显现。", en:"Saturn conjoins the Sun — themes of structure and responsibility reach the start of a new cycle; incubate quietly and let it surface."} },
+    { d:12, e:"✅", t:{zh:"木星结束逆行，恢复顺行（狮子16°）", en:"Jupiter stations direct (Leo 16°)"}, tip:{zh:"扩张与机遇重回前台，被搁置的成长计划可以重启。", en:"Expansion and opportunity return to the foreground — paused growth plans can restart."} },
+    { d:24, e:"💫", t:{zh:"金星合相海王星（白羊5°）", en:"Venus conjunct Neptune (Aries 5°)"}, tip:{zh:"金星与海王星的能量合而为一，感情与财运与灵感与幻象的议题被集中放大，是启动或收尾的节点。", en:"Venus and Neptune fuse — themes of love and finances and inspiration and illusion are magnified; a point to begin or conclude."} },
+    { d:28, e:"☀️", t:{zh:"水星合日（金牛8°）", en:"Mercury conjunct the Sun (Taurus 8°)"}, tip:{zh:"水星与太阳合，沟通与合约主题进入新周期的起点，宜低调酝酿，静待显现。", en:"Mercury conjoins the Sun — themes of communication and contracts reach the start of a new cycle; incubate quietly and let it surface."} }
+  ],
+  "2027-5": [
+    { d:7, e:"💫", t:{zh:"金星合相土星（白羊21°）", en:"Venus conjunct Saturn (Aries 21°)"}, tip:{zh:"金星与土星的能量合而为一，感情与财运与结构与责任的议题被集中放大，是启动或收尾的节点。", en:"Venus and Saturn fuse — themes of love and finances and structure and responsibility are magnified; a point to begin or conclude."} },
+    { d:8, e:"⬅️", t:{zh:"冥王星逆行开始（水瓶7°）", en:"Pluto retrograde begins (Aquarius 7°)"}, tip:{zh:"冥王星逆行至10月17日，权力与深层议题转入暗处重塑，留意幕后动向。", en:"Pluto retrograde runs through Oct 17. Power and deep themes reshape out of sight — watch what happens behind the scenes."} },
+    { d:26, e:"✨", t:{zh:"天王星 Cazimi（双子5°）", en:"Uranus Cazimi (Gemini 5°)"}, tip:{zh:"天王星与太阳几乎重合（Cazimi），突变与创新的能量聚焦于太阳之心，是该领域设定意图的黄金窗口。", en:"Uranus sits at the heart of the Sun (Cazimi) — energy of sudden change and innovation is focused; a prime window to set intentions."} }
+  ],
+  "2027-6": [
+    { d:10, e:"⬅️", t:{zh:"水星逆行开始（巨蟹6°）", en:"Mercury retrograde begins (Cancer 6°)"}, tip:{zh:"水星逆行至7月4日，避免重大签约，注意沟通误解，适合回顾整理。", en:"Mercury retrograde runs through Jul 4. Avoid major signings; expect miscommunication; good for review and integration."} },
+    { d:13, e:"💫", t:{zh:"金星合相天王星（双子6°）", en:"Venus conjunct Uranus (Gemini 6°)"}, tip:{zh:"金星与天王星的能量合而为一，感情与财运与突变与创新的议题被集中放大，是启动或收尾的节点。", en:"Venus and Uranus fuse — themes of love and finances and sudden change and innovation are magnified; a point to begin or conclude."} },
+    { d:23, e:"☀️", t:{zh:"水星逆行合日（巨蟹1°）", en:"Mercury retrograde conjunct the Sun (Cancer 1°)"}, tip:{zh:"水星与太阳合，沟通与合约主题进入新周期的起点，宜低调酝酿，静待显现。", en:"Mercury conjoins the Sun — themes of communication and contracts reach the start of a new cycle; incubate quietly and let it surface."} }
+  ],
+  "2027-7": [
+    { d:4, e:"✅", t:{zh:"水星结束逆行，恢复顺行（双子27°）", en:"Mercury stations direct (Gemini 27°)"}, tip:{zh:"沟通与计划重回正轨，之前搁置的事项可以重新推进。", en:"Communication and plans return to track; previously paused matters can resume."} },
+    { d:9, e:"⬅️", t:{zh:"海王星逆行开始（白羊6°）", en:"Neptune retrograde begins (Aries 6°)"}, tip:{zh:"海王星逆行至12月15日，理想与幻象接受检验，看清真相，勿轻信承诺。", en:"Neptune retrograde runs through Dec 15. Ideals and illusions are tested — see the truth; do not trust promises lightly."} },
+    { d:18, e:"🐲", t:{zh:"半影月食（摩羯25°）", en:"Penumbral Lunar Eclipse (Capricorn 25°)"}, tip:{zh:"半影月食，影响较温和。摩羯座主题：事业、权威与责任结构，适合做轻量的整理与释放。", en:"A penumbral lunar eclipse — a mild one. Capricorn themes: career, authority, and responsibility structures; good for light clearing and release."} },
+    { d:25, e:"🌟", t:{zh:"火星三分相冥王星逆行（天秤-水瓶）；木星进入处女座（离开狮子座）", en:"Mars trine Pluto retrograde (Libra-Aquarius); Jupiter enters Virgo (leaves Leo)"}, tip:{zh:"火星与冥王星和谐流动，行动力与冲突与权力与蜕变进展顺畅，适合推进相关计划。 木星进入处女座，未来约一年扩张的重心从创造与荣耀转向细节、健康、服务与效率，实干与精进的周期开启。", en:"Mars and Pluto flow in harmony — drive and conflict and power and transformation advance smoothly; good for pushing related plans. Jupiter enters Virgo — for the next year or so expansion shifts from creativity and glory toward detail, health, service, and efficiency; a cycle of craftsmanship and refinement begins."} },
+    { d:26, e:"⚡", t:{zh:"火星对冲海王星逆行（天秤-白羊）", en:"Mars opposes Neptune retrograde (Libra-Aries)"}, tip:{zh:"火星与海王星对峙拉扯，需在行动力与冲突与灵感与幻象之间求平衡，留意决策中的摇摆。", en:"Mars and Neptune face off — balance drive and conflict against inspiration and illusion; watch for wavering in decisions."} },
+    { d:28, e:"🌐", t:{zh:"冥王星冲日（水瓶5°）", en:"Pluto at opposition to the Sun (Aquarius 5°)"}, tip:{zh:"冥王星冲日，权力与蜕变主题达到年度高峰，相关事务趋于明朗，也需留意过度。", en:"Pluto opposes the Sun — themes of power and transformation peak for the year and become clearer; watch for excess."} }
+  ],
+  "2027-8": [
+    { d:2, e:"🐉", t:{zh:"日全食（狮子9°）", en:"Total Solar Eclipse (Leo 9°)"}, tip:{zh:"本年最重磅天象！狮子座日全食，创造力、领导力、爱情迎来约半年的命运窗口，旧格局被清理、新方向浮现。", en:"The year's heaviest transit. The Leo total solar eclipse opens a roughly six-month destiny window for creativity, leadership, and love; old patterns clear and new directions emerge."} },
+    { d:9, e:"⬅️", t:{zh:"土星逆行开始（白羊27°）", en:"Saturn retrograde begins (Aries 27°)"}, tip:{zh:"土星逆行至12月23日，重审责任、结构与长期承诺，旧问题需要补课。", en:"Saturn retrograde runs through Dec 23. Re-examine responsibilities, structures, and long-term commitments; old issues need catching up."} },
+    { d:11, e:"☀️", t:{zh:"水星合日（狮子18°）；金星合日（狮子19°）", en:"Mercury conjunct the Sun (Leo 18°); Venus conjunct the Sun (Leo 19°)"}, tip:{zh:"水星与太阳合，沟通与合约主题进入新周期的起点，宜低调酝酿，静待显现。 金星与太阳合，感情与财运主题进入新周期的起点，宜低调酝酿，静待显现。", en:"Mercury conjoins the Sun — themes of communication and contracts reach the start of a new cycle; incubate quietly and let it surface. Venus conjoins the Sun — themes of love and finances reach the start of a new cycle; incubate quietly and let it surface."} },
+    { d:17, e:"🐲", t:{zh:"半影月食（水瓶24°）", en:"Penumbral Lunar Eclipse (Aquarius 24°)"}, tip:{zh:"半影月食，影响较温和。水瓶座主题：科技、社群与群体意识，适合做轻量的整理与释放。", en:"A penumbral lunar eclipse — a mild one. Aquarius themes: technology, community, and collective consciousness; good for light clearing and release."} },
+    { d:25, e:"💫", t:{zh:"金星合相木星（处女6°）", en:"Venus conjunct Jupiter (Virgo 6°)"}, tip:{zh:"金星与木星的能量合而为一，感情与财运与扩张与机遇的议题被集中放大，是启动或收尾的节点。", en:"Venus and Jupiter fuse — themes of love and finances and expansion and opportunity are magnified; a point to begin or conclude."} },
+    { d:29, e:"⚡", t:{zh:"火星对冲土星逆行（天秤-白羊）", en:"Mars opposes Saturn retrograde (Libra-Aries)"}, tip:{zh:"火星与土星对峙拉扯，需在行动力与冲突与结构与责任之间求平衡，留意决策中的摇摆。", en:"Mars and Saturn face off — balance drive and conflict against structure and responsibility; watch for wavering in decisions."} },
+    { d:31, e:"☀️", t:{zh:"木星合日（处女7°）", en:"Jupiter conjunct the Sun (Virgo 7°)"}, tip:{zh:"木星与太阳合，扩张与机遇主题进入新周期的起点，宜低调酝酿，静待显现。", en:"Jupiter conjoins the Sun — themes of expansion and opportunity reach the start of a new cycle; incubate quietly and let it surface."} }
+  ],
+  "2027-9": [
+    { d:9, e:"⚡", t:{zh:"火星四分相冥王星逆行（天蝎-水瓶）", en:"Mars square Pluto retrograde (Scorpio-Aquarius)"}, tip:{zh:"⚠️ 火星与冥王星互相牵制，行动力与冲突与权力与蜕变之间张力显现，宜缓行，避免硬碰硬。", en:"⚠️ Mars and Pluto pull against each other — tension between drive and conflict and power and transformation; slow down and avoid head-on clashes."} },
+    { d:15, e:"⬅️", t:{zh:"天王星逆行开始（双子9°）", en:"Uranus retrograde begins (Gemini 9°)"}, tip:{zh:"天王星逆行至，变革与创新的节奏转向内部消化，突发事件中先回头检视。", en:"Uranus retrograde runs through . The pace of change and innovation turns inward — review before reacting to sudden events."} },
+    { d:28, e:"🌐", t:{zh:"海王星冲日（白羊5°）", en:"Neptune at opposition to the Sun (Aries 5°)"}, tip:{zh:"海王星冲日，灵感与幻象主题达到年度高峰，相关事务趋于明朗，也需留意过度。", en:"Neptune opposes the Sun — themes of inspiration and illusion peak for the year and become clearer; watch for excess."} }
+  ],
+  "2027-10": [
+    { d:7, e:"⬅️", t:{zh:"水星逆行开始（天蝎4°）", en:"Mercury retrograde begins (Scorpio 4°)"}, tip:{zh:"水星逆行至10月28日，避免重大签约，注意沟通误解，适合回顾整理。", en:"Mercury retrograde runs through Oct 28. Avoid major signings; expect miscommunication; good for review and integration."} },
+    { d:17, e:"🌐", t:{zh:"土星冲日（白羊24°）；冥王星结束逆行，恢复顺行（水瓶4°）", en:"Saturn at opposition to the Sun (Aries 24°); Pluto stations direct (Aquarius 4°)"}, tip:{zh:"土星冲日，结构与责任主题达到年度高峰，相关事务趋于明朗，也需留意过度。 冥王星所主的权力与蜕变重新向前推进，逆行期间复盘的结论可以付诸实践。", en:"Saturn opposes the Sun — themes of structure and responsibility peak for the year and become clearer; watch for excess. Pluto's themes of power and transformation move forward again — lessons from the retrograde can be put into practice."} },
+    { d:19, e:"☀️", t:{zh:"水星逆行合日（天秤26°）", en:"Mercury retrograde conjunct the Sun (Libra 26°)"}, tip:{zh:"水星与太阳合，沟通与合约主题进入新周期的起点，宜低调酝酿，静待显现。", en:"Mercury conjoins the Sun — themes of communication and contracts reach the start of a new cycle; incubate quietly and let it surface."} },
+    { d:22, e:"🔭", t:{zh:"火星三分相海王星逆行（射手-白羊）；火星六分相冥王星（射手-水瓶）", en:"Mars trine Neptune retrograde (Sagittarius-Aries); Mars sextile Pluto (Sagittarius-Aquarius)"}, tip:{zh:"火星与海王星和谐流动，行动力与冲突与灵感与幻象进展顺畅，适合推进相关计划。 火星与冥王星形成助力，行动力与冲突与权力与蜕变的机会自然浮现，主动一步即可借力。", en:"Mars and Neptune flow in harmony — drive and conflict and inspiration and illusion advance smoothly; good for pushing related plans. Mars and Pluto support each other — opportunities between drive and conflict and power and transformation surface; one proactive step lets you use them."} },
+    { d:28, e:"✅", t:{zh:"水星结束逆行，恢复顺行（天秤19°）；火星对冲天王星逆行（射手-双子）", en:"Mercury stations direct (Libra 19°); Mars opposes Uranus retrograde (Sagittarius-Gemini)"}, tip:{zh:"沟通与计划重回正轨，之前搁置的事项可以重新推进。 火星与天王星对峙拉扯，需在行动力与冲突与突变与创新之间求平衡，留意决策中的摇摆。", en:"Communication and plans return to track; previously paused matters can resume. Mars and Uranus face off — balance drive and conflict against sudden change and innovation; watch for wavering in decisions."} }
+  ],
+  "2027-11": [
+    { d:15, e:"🔭", t:{zh:"火星三分相土星逆行（射手-白羊）", en:"Mars trine Saturn retrograde (Sagittarius-Aries)"}, tip:{zh:"火星与土星和谐流动，行动力与冲突与结构与责任进展顺畅，适合推进相关计划。", en:"Mars and Saturn flow in harmony — drive and conflict and structure and responsibility advance smoothly; good for pushing related plans."} },
+    { d:24, e:"💫", t:{zh:"金星合相火星（射手29°）", en:"Venus conjunct Mars (Sagittarius 29°)"}, tip:{zh:"金星与火星的能量合而为一，感情与财运与行动力与冲突的议题被集中放大，是启动或收尾的节点。", en:"Venus and Mars fuse — themes of love and finances and drive and conflict are magnified; a point to begin or conclude."} },
+    { d:30, e:"🌐", t:{zh:"天王星冲日（双子7°）；火星四分相海王星逆行（摩羯-白羊）", en:"Uranus at opposition to the Sun (Gemini 7°); Mars square Neptune retrograde (Capricorn-Aries)"}, tip:{zh:"天王星冲日，突变与创新主题达到年度高峰，相关事务趋于明朗，也需留意过度。 ⚠️ 火星与海王星互相牵制，行动力与冲突与灵感与幻象之间张力显现，宜缓行，避免硬碰硬。", en:"Uranus opposes the Sun — themes of sudden change and innovation peak for the year and become clearer; watch for excess. ⚠️ Mars and Neptune pull against each other — tension between drive and conflict and inspiration and illusion; slow down and avoid head-on clashes."} }
+  ],
+  "2027-12": [
+    { d:11, e:"☀️", t:{zh:"水星合日（射手19°）", en:"Mercury conjunct the Sun (Sagittarius 19°)"}, tip:{zh:"水星与太阳合，沟通与合约主题进入新周期的起点，宜低调酝酿，静待显现。", en:"Mercury conjoins the Sun — themes of communication and contracts reach the start of a new cycle; incubate quietly and let it surface."} },
+    { d:15, e:"✅", t:{zh:"海王星结束逆行，恢复顺行（白羊3°）", en:"Neptune stations direct (Aries 3°)"}, tip:{zh:"海王星所主的灵感与幻象重新向前推进，逆行期间复盘的结论可以付诸实践。", en:"Neptune's themes of inspiration and illusion move forward again — lessons from the retrograde can be put into practice."} },
+    { d:22, e:"⚡", t:{zh:"火星四分相土星逆行（摩羯-白羊）", en:"Mars square Saturn retrograde (Capricorn-Aries)"}, tip:{zh:"⚠️ 火星与土星互相牵制，行动力与冲突与结构与责任之间张力显现，宜缓行，避免硬碰硬。", en:"⚠️ Mars and Saturn pull against each other — tension between drive and conflict and structure and responsibility; slow down and avoid head-on clashes."} },
+    { d:23, e:"✅", t:{zh:"土星结束逆行，恢复顺行（白羊21°）", en:"Saturn stations direct (Aries 21°)"}, tip:{zh:"土星所主的结构与责任重新向前推进，逆行期间复盘的结论可以付诸实践。", en:"Saturn's themes of structure and responsibility move forward again — lessons from the retrograde can be put into practice."} },
+    { d:24, e:"💫", t:{zh:"金星合相冥王星（水瓶5°）", en:"Venus conjunct Pluto (Aquarius 5°)"}, tip:{zh:"金星与冥王星的能量合而为一，感情与财运与权力与蜕变的议题被集中放大，是启动或收尾的节点。", en:"Venus and Pluto fuse — themes of love and finances and power and transformation are magnified; a point to begin or conclude."} }
+  ]
+};
+
+const AstroDB = { ...AstroDB2026, ...AstroDB2027 };
+
 function renderAstrology() {
   const now = new Date();
   const year = now.getFullYear();
@@ -1570,7 +1641,7 @@ function renderAstrology() {
   const pick = (obj) => obj ? (obj[currentLang] || obj.zh) : '';
 
   // 非2026年兜底提示
-  if (year !== 2026) {
+  if (year < 2026 || year > 2027) {
     document.getElementById('major-alert-container').innerHTML = `
       <div class="alert-banner" style="background:linear-gradient(135deg,var(--stone),var(--ink-soft))">
         <div class="alert-icon">📅</div>
@@ -1587,7 +1658,7 @@ function renderAstrology() {
   }
 
   // === 今日 / 近7天 星象提示 ===
-  const allEvents = AstroDB2026[key] || [];
+  const allEvents = AstroDB[key] || [];
   const todayEvt = allEvents.find(e => e.d === day);
   const upcomingEvts = [];
 
@@ -1596,7 +1667,7 @@ function renderAstrology() {
     const d = new Date(now);
     d.setDate(day + offset);
     const k = `${d.getFullYear()}-${d.getMonth()+1}`;
-    const evts = AstroDB2026[k] || [];
+    const evts = AstroDB[k] || [];
     evts.forEach(e => {
       if (e.d === d.getDate()) {
         upcomingEvts.push({ ...e, date: d });
@@ -1635,7 +1706,7 @@ function renderAstrology() {
 
   // === 当月星象列表 ===
   const planetList = document.getElementById('planet-list');
-  const monthEvts = AstroDB2026[key] || [];
+  const monthEvts = AstroDB[key] || [];
   if (monthEvts.length === 0) {
     planetList.innerHTML = `<div style="text-align:center;color:var(--mist);padding:16px;font-size:0.85rem">${t('monthPeaceful')}</div>`;
   } else {
@@ -1794,52 +1865,6 @@ function dayLabel(l, solarYear) {
   return DA_TOUXIU.includes(gz) ? '偷修' : '吉';
 }
 
-// 2027 年重大星象（北京时间 MM-DD HH:MM）：日月食、行星逆行/顺行、冲日、木星换宫、金星合相
-// 由 astronomy-engine 逐项计算；日月食、水星逆行、各行星冲日日期已对照公开星历
-const ASTRO_2027 = [
-  ['01-04 01:56', "金星西大距（约47°，晨星）", "Venus greatest western elongation (~47°, morning star)"],
-  ['01-10 21:01', "火星开始逆行", "Mars stations retrograde"],
-  ['02-06 23:59', "日环食（南美洲南部—大西洋—非洲）", "Annular solar eclipse (southern South America, Atlantic, Africa)"],
-  ['02-08 20:23', "天王星结束逆行转顺行", "Uranus stations direct"],
-  ['02-10 01:35', "水星开始逆行", "Mercury stations retrograde"],
-  ['02-11 08:17', "木星冲日", "Jupiter at opposition"],
-  ['02-19 23:44', "火星冲日", "Mars at opposition"],
-  ['02-21 07:12', "半影月食（肉眼不易察觉）", "Penumbral lunar eclipse (hard to notice by eye)"],
-  ['03-03 20:34', "水星结束逆行转顺行", "Mercury stations direct"],
-  ['04-01 22:10', "火星结束逆行转顺行", "Mars stations direct"],
-  ['04-13 10:13', "木星结束逆行转顺行", "Jupiter stations direct"],
-  ['04-24 18:59', "金星合海王星（相距约0.2°）", "Venus–Neptune conjunction (~0.2° apart)"],
-  ['05-08 02:44', "金星合土星（相距约0.6°）", "Venus–Saturn conjunction (~0.6° apart)"],
-  ['05-08 20:14', "冥王星开始逆行", "Pluto stations retrograde"],
-  ['06-11 02:18', "水星开始逆行", "Mercury stations retrograde"],
-  ['06-14 10:17', "金星合天王星（相距约0.7°）", "Venus–Uranus conjunction (~0.7° apart)"],
-  ['07-05 03:40', "水星结束逆行转顺行", "Mercury stations direct"],
-  ['07-10 06:49', "海王星开始逆行", "Neptune stations retrograde"],
-  ['07-19 00:02', "半影月食（肉眼不易察觉）", "Penumbral lunar eclipse (hard to notice by eye)"],
-  ['07-26 12:45', "木星进入处女座（离开狮子座）", "Jupiter enters Virgo (leaves Leo)"],
-  ['07-29 14:31', "冥王星冲日", "Pluto at opposition"],
-  ['08-02 18:06', "日全食（路径经西班牙南部、北非、埃及至索马里；卢克索附近全食约6分23秒）", "Total solar eclipse (path: southern Spain, North Africa, Egypt, Somalia; ~6m23s of totality near Luxor)"],
-  ['08-10 01:52', "土星开始逆行", "Saturn stations retrograde"],
-  ['08-12 07:42', "金星上合（与太阳同向，不可见）", "Venus superior conjunction (behind the Sun)"],
-  ['08-17 15:13', "半影月食（肉眼不易察觉）", "Penumbral lunar eclipse (hard to notice by eye)"],
-  ['09-15 17:14', "天王星开始逆行", "Uranus stations retrograde"],
-  ['09-28 22:08', "海王星冲日", "Neptune at opposition"],
-  ['10-07 22:40', "水星开始逆行", "Mercury stations retrograde"],
-  ['10-18 08:18', "土星冲日", "Saturn at opposition"],
-  ['10-18 11:51', "冥王星结束逆行转顺行", "Pluto stations direct"],
-  ['10-28 22:10', "水星结束逆行转顺行", "Mercury stations direct"],
-  ['11-25 09:35', "金星合火星（相距约0.3°）", "Venus–Mars conjunction (~0.3° apart)"],
-  ['11-30 17:08', "天王星冲日", "Uranus at opposition"],
-  ['12-15 17:42', "海王星结束逆行转顺行", "Neptune stations direct"],
-  ['12-24 10:49', "土星结束逆行转顺行", "Saturn stations direct"],
-];
-
-function astroDays(m) { // m: 1-12 → { 日: [[时间, zh, en], ...] }
-  const r = {};
-  ASTRO_2027.filter(e => +e[0].slice(0, 2) === m).forEach(e => (r[+e[0].slice(3, 5)] ||= []).push([e[0].slice(6), e[1], e[2]]));
-  return r;
-}
-
 let calYear = new Date().getFullYear();
 let calMonth = new Date().getMonth();
 
@@ -1870,7 +1895,6 @@ function renderCalendar() {
     cell.className = 'cal-day other-month';
     grid.appendChild(cell);
   }
-  const astro = calYear === 2027 ? astroDays(calMonth + 1) : {};
   for (let i = 1; i <= lastDay.getDate(); i++) {
     const d = new Date(calYear, calMonth, i);
     const l = Lunar.fromDate(d);
@@ -1905,20 +1929,10 @@ function renderCalendar() {
     const hsTag = hs ? `<div class="tag-hongsha">${EN ? 'Red Sha' : '红煞'}</div>` : '';
     if (label) cell.classList.add('pos');
     else if (hs || qs) cell.classList.add('neg');
-    const astroTag = astro[i] ? '<div class="astro-dot">✦</div>' : '';
-    cell.innerHTML = `<div class="solar-day">${i}</div><div class="lunar-day">${subTxt}</div>${astroTag}<div class="cal-tags">${jiTag}${hsTag}${qsTag}${chuTag}</div>`;
+    cell.innerHTML = `<div class="solar-day">${i}</div><div class="lunar-day">${subTxt}</div><div class="cal-tags">${jiTag}${hsTag}${qsTag}${chuTag}</div>`;
     cell.onclick = () => renderDailyDetail(d);
     grid.appendChild(cell);
   }
-
-  // 本月重大星象列表
-  const card = document.getElementById('astro-card');
-  const days = Object.keys(astro);
-  card.style.display = days.length ? '' : 'none';
-  document.getElementById('astro-title').textContent = EN
-    ? 'Celestial events this month (Beijing time)' : '本月重大星象（北京时间）';
-  document.getElementById('astro-list').innerHTML = days.map(d => astro[d].map(([t, zh, en]) =>
-    `<div class="astro-row"><span class="astro-date">${calMonth + 1}/${d} ${t}</span>${EN ? en : zh}</div>`).join('')).join('');
 
   // 渲染今日详情
   renderDailyDetail(now);
