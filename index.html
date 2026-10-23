@@ -463,6 +463,9 @@
     font-size: 0.8rem; padding: 4px 2px;
     transition: all 0.18s; position: relative;
   }
+  /* 有标记的格子：吉/偷修为积极色，红煞/七煞为消极色（须在 hover/today 之前，让后两者能覆盖） */
+  .cal-day.pos { background: rgba(63,157,98,0.17); }
+  .cal-day.neg { background: rgba(214,52,44,0.12); }
   .cal-day:hover { background: var(--sky-pale); }
   .cal-day.today {
     background: var(--sky);
@@ -477,32 +480,23 @@
     width: 3px; height: 3px; border-radius: 50%;
     background: var(--sky-light); position: absolute; bottom: 3px;
   }
-  .tag-chu {
-    position: absolute; bottom: 2px; right: 2px;
-    font-size: 0.44rem; background: rgba(176,142,192,0.7); color: #fff;
-    padding: 0 3px; border-radius: 3px; line-height: 1.5;
+  .cal-tags {
+    position: absolute; bottom: 2px; left: 0; right: 0;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 1px;
   }
-  .tag-ji {
-    position: absolute; bottom: 2px; left: 2px;
-    font-size: 0.44rem; background: rgba(106,174,214,0.7); color: #fff;
-    padding: 0 3px; border-radius: 3px; line-height: 1.5;
+  .cal-tags > div {
+    font-size: 0.44rem; color: #fff; white-space: nowrap;
+    padding: 0 2px; border-radius: 3px; line-height: 1.5;
   }
-  .tag-ji.tou { background: rgba(176,142,192,0.8); }
-  .tag-hongsha {
-    position: absolute; top: 2px; right: 2px;
-    font-size: 0.44rem; background: #d6342c; color: #fff;
-    padding: 0 3px; border-radius: 3px; line-height: 1.5;
-  }
-  .tag-jinshen {
-    position: absolute; top: 2px; left: 2px;
-    font-size: 0.44rem; background: #8a8f96; color: #fff;
-    padding: 0 3px; border-radius: 3px; line-height: 1.5;
-  }
-  .jinshen-note { color: #7a8088; font-weight: 700; }
+  .tag-chu { background: rgba(176,142,192,0.7); }
+  .tag-ji { background: #3f9d62; }
+  .tag-ji.tou { background: #2e8a8a; }
+  .tag-hongsha { background: #d6342c; }
+  .tag-qisha { background: #8a8f96; }
+  .qisha-note { color: #7a8088; font-weight: 700; }
+  .hongsha-note { color: #d6342c; font-weight: 700; }
   .cal-day.hongsha .solar-day { color: #d6342c; }
   .cal-day.today.hongsha .solar-day { color: #fff; }
-  .hongsha-note { color: #d6342c; font-weight: 700; }
-  .cal-day.today .tag-chu, .cal-day.today .tag-ji { opacity: 0.88; }
 
   /* Daily detail */
   .daily-detail {
@@ -1846,9 +1840,12 @@ function renderCalendar() {
     const jiTag = label
       ? `<div class="tag-ji ${label === '偷修' ? 'tou' : ''}">${EN ? JIRI_EN[label] : label}</div>` : '';
 
-    const jsTag = isJinShen(l) ? `<div class="tag-jinshen">${EN ? 'Jinshen' : '金神'}</div>` : '';
+    const qs = isJinShen(l);
+    const qsTag = qs ? `<div class="tag-qisha">${EN ? 'Qisha' : '七煞'}</div>` : '';
     const hsTag = hs ? `<div class="tag-hongsha">${EN ? 'Red Sha' : '红煞'}</div>` : '';
-    cell.innerHTML = `<div class="solar-day">${i}</div><div class="lunar-day">${subTxt}</div>${chuTag}${jiTag}${hsTag}${jsTag}`;
+    if (label) cell.classList.add('pos');
+    else if (hs || qs) cell.classList.add('neg');
+    cell.innerHTML = `<div class="solar-day">${i}</div><div class="lunar-day">${subTxt}</div><div class="cal-tags">${jiTag}${hsTag}${qsTag}${chuTag}</div>`;
     cell.onclick = () => renderDailyDetail(d);
     grid.appendChild(cell);
   }
@@ -1866,7 +1863,7 @@ function renderDailyDetail(date) {
   const hsNote = isHongSha(l, date.getFullYear())
     ? ` <span class="hongsha-note">${EN ? '· Red Sha Day' : '· 红煞日'}</span>` : '';
   const jsNote = isJinShen(l)
-    ? ` <span class="jinshen-note">${EN ? '· Jinshen Qisha Day' : '· 金神七煞日'}</span>` : '';
+    ? ` <span class="qisha-note">${EN ? '· Jinshen Qisha Day' : '· 金神七煞日'}</span>` : '';
   document.getElementById('ganzhi-display').innerHTML = (EN
     ? `Y ${l.getYearInGanZhi()} · M ${l.getMonthInGanZhi()} · D ${l.getDayInGanZhi()}`
     : `${l.getYearInGanZhi()}年　${l.getMonthInGanZhi()}月　${l.getDayInGanZhi()}日`) + hsNote + jsNote;
