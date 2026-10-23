@@ -498,6 +498,14 @@
   .cal-day.hongsha .solar-day { color: #d6342c; }
   .cal-day.today.hongsha .solar-day { color: #fff; }
 
+  .astro-dot {
+    position: absolute; top: 2px; right: 3px;
+    font-size: 0.6rem; line-height: 1; color: #5b4bd6;
+  }
+  .cal-day.today .astro-dot { color: #fff; }
+  .astro-row { font-size: 0.8rem; line-height: 1.55; padding: 2px 0; }
+  .astro-date { display: inline-block; min-width: 6.2em; margin-right: 6px; color: #5b4bd6; font-weight: 700; font-variant-numeric: tabular-nums; }
+
   /* Daily detail */
   .daily-detail {
     margin-top: 12px;
@@ -740,6 +748,11 @@
       <button class="cal-nav-btn" onclick="calNav(1)">›</button>
     </div>
     <div class="cal-grid" id="cal-grid"></div>
+  </div>
+
+  <div class="detail-box" id="astro-card" style="display:none;margin-bottom:10px">
+    <div class="detail-box-title" id="astro-title"></div>
+    <div id="astro-list"></div>
   </div>
 
   <div id="ganzhi-bar" style="background:white;border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 1px 6px var(--shadow)">
@@ -1781,6 +1794,52 @@ function dayLabel(l, solarYear) {
   return DA_TOUXIU.includes(gz) ? '偷修' : '吉';
 }
 
+// 2027 年重大星象（北京时间 MM-DD HH:MM）：日月食、行星逆行/顺行、冲日、木星换宫、金星合相
+// 由 astronomy-engine 逐项计算；日月食、水星逆行、各行星冲日日期已对照公开星历
+const ASTRO_2027 = [
+  ['01-04 01:56', "金星西大距（约47°，晨星）", "Venus greatest western elongation (~47°, morning star)"],
+  ['01-10 21:01', "火星开始逆行", "Mars stations retrograde"],
+  ['02-06 23:59', "日环食（南美洲南部—大西洋—非洲）", "Annular solar eclipse (southern South America, Atlantic, Africa)"],
+  ['02-08 20:23', "天王星结束逆行转顺行", "Uranus stations direct"],
+  ['02-10 01:35', "水星开始逆行", "Mercury stations retrograde"],
+  ['02-11 08:17', "木星冲日", "Jupiter at opposition"],
+  ['02-19 23:44', "火星冲日", "Mars at opposition"],
+  ['02-21 07:12', "半影月食（肉眼不易察觉）", "Penumbral lunar eclipse (hard to notice by eye)"],
+  ['03-03 20:34', "水星结束逆行转顺行", "Mercury stations direct"],
+  ['04-01 22:10', "火星结束逆行转顺行", "Mars stations direct"],
+  ['04-13 10:13', "木星结束逆行转顺行", "Jupiter stations direct"],
+  ['04-24 18:59', "金星合海王星（相距约0.2°）", "Venus–Neptune conjunction (~0.2° apart)"],
+  ['05-08 02:44', "金星合土星（相距约0.6°）", "Venus–Saturn conjunction (~0.6° apart)"],
+  ['05-08 20:14', "冥王星开始逆行", "Pluto stations retrograde"],
+  ['06-11 02:18', "水星开始逆行", "Mercury stations retrograde"],
+  ['06-14 10:17', "金星合天王星（相距约0.7°）", "Venus–Uranus conjunction (~0.7° apart)"],
+  ['07-05 03:40', "水星结束逆行转顺行", "Mercury stations direct"],
+  ['07-10 06:49', "海王星开始逆行", "Neptune stations retrograde"],
+  ['07-19 00:02', "半影月食（肉眼不易察觉）", "Penumbral lunar eclipse (hard to notice by eye)"],
+  ['07-26 12:45', "木星进入处女座（离开狮子座）", "Jupiter enters Virgo (leaves Leo)"],
+  ['07-29 14:31', "冥王星冲日", "Pluto at opposition"],
+  ['08-02 18:06', "日全食（路径经西班牙南部、北非、埃及至索马里；卢克索附近全食约6分23秒）", "Total solar eclipse (path: southern Spain, North Africa, Egypt, Somalia; ~6m23s of totality near Luxor)"],
+  ['08-10 01:52', "土星开始逆行", "Saturn stations retrograde"],
+  ['08-12 07:42', "金星上合（与太阳同向，不可见）", "Venus superior conjunction (behind the Sun)"],
+  ['08-17 15:13', "半影月食（肉眼不易察觉）", "Penumbral lunar eclipse (hard to notice by eye)"],
+  ['09-15 17:14', "天王星开始逆行", "Uranus stations retrograde"],
+  ['09-28 22:08', "海王星冲日", "Neptune at opposition"],
+  ['10-07 22:40', "水星开始逆行", "Mercury stations retrograde"],
+  ['10-18 08:18', "土星冲日", "Saturn at opposition"],
+  ['10-18 11:51', "冥王星结束逆行转顺行", "Pluto stations direct"],
+  ['10-28 22:10', "水星结束逆行转顺行", "Mercury stations direct"],
+  ['11-25 09:35', "金星合火星（相距约0.3°）", "Venus–Mars conjunction (~0.3° apart)"],
+  ['11-30 17:08', "天王星冲日", "Uranus at opposition"],
+  ['12-15 17:42', "海王星结束逆行转顺行", "Neptune stations direct"],
+  ['12-24 10:49', "土星结束逆行转顺行", "Saturn stations direct"],
+];
+
+function astroDays(m) { // m: 1-12 → { 日: [[时间, zh, en], ...] }
+  const r = {};
+  ASTRO_2027.filter(e => +e[0].slice(0, 2) === m).forEach(e => (r[+e[0].slice(3, 5)] ||= []).push([e[0].slice(6), e[1], e[2]]));
+  return r;
+}
+
 let calYear = new Date().getFullYear();
 let calMonth = new Date().getMonth();
 
@@ -1811,6 +1870,7 @@ function renderCalendar() {
     cell.className = 'cal-day other-month';
     grid.appendChild(cell);
   }
+  const astro = calYear === 2027 ? astroDays(calMonth + 1) : {};
   for (let i = 1; i <= lastDay.getDate(); i++) {
     const d = new Date(calYear, calMonth, i);
     const l = Lunar.fromDate(d);
@@ -1845,10 +1905,20 @@ function renderCalendar() {
     const hsTag = hs ? `<div class="tag-hongsha">${EN ? 'Red Sha' : '红煞'}</div>` : '';
     if (label) cell.classList.add('pos');
     else if (hs || qs) cell.classList.add('neg');
-    cell.innerHTML = `<div class="solar-day">${i}</div><div class="lunar-day">${subTxt}</div><div class="cal-tags">${jiTag}${hsTag}${qsTag}${chuTag}</div>`;
+    const astroTag = astro[i] ? '<div class="astro-dot">✦</div>' : '';
+    cell.innerHTML = `<div class="solar-day">${i}</div><div class="lunar-day">${subTxt}</div>${astroTag}<div class="cal-tags">${jiTag}${hsTag}${qsTag}${chuTag}</div>`;
     cell.onclick = () => renderDailyDetail(d);
     grid.appendChild(cell);
   }
+
+  // 本月重大星象列表
+  const card = document.getElementById('astro-card');
+  const days = Object.keys(astro);
+  card.style.display = days.length ? '' : 'none';
+  document.getElementById('astro-title').textContent = EN
+    ? 'Celestial events this month (Beijing time)' : '本月重大星象（北京时间）';
+  document.getElementById('astro-list').innerHTML = days.map(d => astro[d].map(([t, zh, en]) =>
+    `<div class="astro-row"><span class="astro-date">${calMonth + 1}/${d} ${t}</span>${EN ? en : zh}</div>`).join('')).join('');
 
   // 渲染今日详情
   renderDailyDetail(now);
