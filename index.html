@@ -1763,21 +1763,24 @@ function isJinShen(l) {
 }
 
 // 煞贡、直星、人专三吉星（金符九星）：按节气月分孟(1,4,7,10)/仲(2,5,8,11)/季(3,6,9,12)月，每项为日干支
-// 已对照 2026 年原数据逐日验证（0 差异）；原表季月 煞贡"己丑"、直星"辛卯"、人专"己亥"按序列规律更正为 乙丑/辛亥/丁亥
 const SANJI = [
   [ // 孟月
     '丁卯丙子乙酉甲午癸卯壬子辛酉', '戊辰丁丑丙戌乙未甲辰癸丑壬戌', '辛未庚辰己丑戊戌丁未丙辰'],
   [ // 仲月
     '丙寅乙亥甲申癸巳壬寅辛亥庚申', '丁卯丙子乙酉甲午癸卯壬子辛酉', '庚午己卯戊子丁酉丙午乙卯'],
   [ // 季月
-    '乙丑甲戌癸未壬辰辛丑庚戌己未', '丙寅乙亥甲申癸巳壬寅辛亥庚申', '己巳戊寅丁亥丙申乙巳甲寅癸亥'],
+    '己丑甲戌癸未壬辰辛丑庚戌己未', '丙寅乙亥甲申癸巳壬寅辛卯庚申', '己巳戊寅己亥丙申乙巳甲寅癸亥'],
 ].map(t => t.join(''));
 // 大偷修日（凶神朝天）：这 8 个干支日
 const DA_TOUXIU = '壬子癸丑丙辰丁巳戊午己未庚申辛酉';
 
-// 吉日 = 三吉星日；其中属大偷修的标"偷修"；红煞日/金神七煞日一律不标
+// 杨公十三忌日（农历月 → 日）
+const YANGGONG = {1:[13], 2:[11], 3:[9], 4:[7], 5:[5], 6:[3], 7:[1, 29], 8:[27], 9:[25], 10:[23], 11:[21], 12:[19]};
+function isYangGong(l) { return YANGGONG[Math.abs(l.getMonth())].includes(l.getDay()); }
+
+// 吉日 = 三吉星日；其中属大偷修的标"偷修"；红煞日/金神七煞日/杨公忌日一律不标
 function dayLabel(l, solarYear) {
-  if (solarYear > HONGSHA_UNTIL_YEAR || isHongSha(l, solarYear) || isJinShen(l)) return '';
+  if (solarYear > HONGSHA_UNTIL_YEAR || isHongSha(l, solarYear) || isJinShen(l) || isYangGong(l)) return '';
   const m = (ZHI12.indexOf(l.getMonthZhi()) + 10) % 12 + 1;
   const gz = l.getDayInGanZhi();
   if (!SANJI[[2, 0, 1][m % 3]].includes(gz)) return '';
