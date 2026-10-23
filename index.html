@@ -488,6 +488,14 @@
     padding: 0 3px; border-radius: 3px; line-height: 1.5;
   }
   .tag-ji.tou { background: rgba(176,142,192,0.8); }
+  .tag-hongsha {
+    position: absolute; top: 2px; right: 2px;
+    font-size: 0.44rem; background: #d6342c; color: #fff;
+    padding: 0 3px; border-radius: 3px; line-height: 1.5;
+  }
+  .cal-day.hongsha .solar-day { color: #d6342c; }
+  .cal-day.today.hongsha .solar-day { color: #fff; }
+  .hongsha-note { color: #d6342c; font-weight: 700; }
   .cal-day.today .tag-chu, .cal-day.today .tag-ji { opacity: 0.88; }
 
   /* Daily detail */
@@ -1746,6 +1754,15 @@ const JiRi2026 = {
 
 const JIRI_EN = { '吉':'Ji', '偷修':'Repair' };
 
+// 红煞日：农历孟月(1,4,7,10)逢酉、仲月(2,5,8,11)逢巳、季月(3,6,9,12)逢丑
+// ponytail: 只标到 HONGSHA_UNTIL_YEAR（阳历年），要延长改这个数；闰月按本月同号处理
+const HONGSHA_UNTIL_YEAR = 2030;
+function isHongSha(l, solarYear) {
+  if (solarYear > HONGSHA_UNTIL_YEAR) return false;
+  const zhi = ['酉', '巳', '丑'][(Math.abs(l.getMonth()) + 2) % 3];
+  return l.getDayZhi() === zhi;
+}
+
 let calYear = new Date().getFullYear();
 let calMonth = new Date().getMonth();
 
@@ -1782,7 +1799,8 @@ function renderCalendar() {
     const isToday = d.toDateString() === now.toDateString();
 
     const cell = document.createElement('div');
-    cell.className = 'cal-day' + (isToday ? ' today' : '');
+    const hs = isHongSha(l, calYear);
+    cell.className = 'cal-day' + (isToday ? ' today' : '') + (hs ? ' hongsha' : '');
 
     // 农历日期显示：初一显示月份（保留中文，因为是 lunar-javascript 返回的）
     let lunarTxt = l.getDayInChinese();
@@ -1810,7 +1828,8 @@ function renderCalendar() {
       }
     }
 
-    cell.innerHTML = `<div class="solar-day">${i}</div><div class="lunar-day">${subTxt}</div>${chuTag}${jiTag}`;
+    const hsTag = hs ? `<div class="tag-hongsha">${EN ? 'Red Sha' : '红煞'}</div>` : '';
+    cell.innerHTML = `<div class="solar-day">${i}</div><div class="lunar-day">${subTxt}</div>${chuTag}${jiTag}${hsTag}`;
     cell.onclick = () => renderDailyDetail(d);
     grid.appendChild(cell);
   }
@@ -1825,13 +1844,11 @@ function renderDailyDetail(date) {
   const EN = currentLang === 'en';
 
   // 年月日干支 — 干支字符保留中文，标签改语言
-  if (EN) {
-    document.getElementById('ganzhi-display').textContent =
-      `Y ${l.getYearInGanZhi()} · M ${l.getMonthInGanZhi()} · D ${l.getDayInGanZhi()}`;
-  } else {
-    document.getElementById('ganzhi-display').textContent =
-      `${l.getYearInGanZhi()}年　${l.getMonthInGanZhi()}月　${l.getDayInGanZhi()}日`;
-  }
+  const hsNote = isHongSha(l, date.getFullYear())
+    ? ` <span class="hongsha-note">${EN ? '· Red Sha Day' : '· 红煞日'}</span>` : '';
+  document.getElementById('ganzhi-display').innerHTML = (EN
+    ? `Y ${l.getYearInGanZhi()} · M ${l.getMonthInGanZhi()} · D ${l.getDayInGanZhi()}`
+    : `${l.getYearInGanZhi()}年　${l.getMonthInGanZhi()}月　${l.getDayInGanZhi()}日`) + hsNote;
 
   // 宜忌
   const yi = l.getDayYi().filter(x => ModernEvents.includes(x));
