@@ -1742,22 +1742,6 @@ function jianchuLabel(zh) { return currentLang === 'en' ? (JIANCHU_EN[zh] || zh)
 
 const ModernEvents = ["出行","纳财","入宅","嫁娶","交易","会友","签约","装修","搬家","祈福","开市","动土","置产","安床","理发","求医"];
 
-// 吉日/偷修日数据库（来自原版源码）
-const JiRi2026 = {
-  "1-1":"吉","1-2":"吉","1-9":"吉","1-10":"吉","1-13":"吉","1-22":"吉","1-28":"吉",
-  "2-11":"偷修","2-17":"吉","2-23":"吉","2-26":"吉",
-  "3-11":"吉","3-12":"吉","3-21":"吉","3-24":"吉",
-  "4-2":"吉","4-6":"吉","4-7":"吉","4-15":"偷修","4-16":"偷修","4-19":"吉","4-25":"吉","4-30":"吉",
-  "5-1":"吉","5-6":"吉","5-12":"吉","5-20":"吉","5-21":"吉","5-24":"吉","5-30":"吉",
-  "6-2":"吉","6-6":"吉","6-15":"偷修","6-16":"偷修","6-25":"吉","6-30":"吉",
-  "7-8":"吉","7-9":"吉","7-12":"吉","7-17":"吉","7-18":"吉","7-21":"吉","7-30":"吉",
-  "8-4":"吉","8-5":"吉","8-10":"偷修","8-16":"吉","8-22":"吉","8-25":"吉",
-  "9-3":"吉","9-7":"吉","9-8":"吉","9-17":"吉","9-20":"吉","9-29":"吉",
-  "10-4":"吉","10-12":"偷修","10-13":"偷修","10-16":"吉","10-22":"吉","10-27":"吉","10-28":"吉",
-  "11-5":"吉","11-6":"吉","11-8":"吉","11-16":"吉","11-17":"吉","11-20":"吉","11-26":"吉","11-29":"吉",
-  "12-12":"偷修","12-13":"偷修","12-22":"吉","12-27":"吉"
-};
-
 const JIRI_EN = { '吉':'Ji', '偷修':'Repair' };
 
 // 红煞日：节气月(寅月=1…丑月=12)孟月(1,4,7,10)逢酉、仲月(2,5,8,11)逢巳、季月(3,6,9,12)逢丑
@@ -1778,11 +1762,26 @@ function isJinShen(l) {
   return JINSHEN_ZHI[l.getYearGanByLiChun()].includes(l.getDayZhi());
 }
 
-// 大偷修日（凶神朝天）：8 个干支日；若同日是红煞日或金神七煞日则排除
-// ponytail: 2026 年沿用 JiRi2026 里的原始数据，2027 年起按此规则计算
-const DA_TOUXIU = ['壬子', '癸丑', '丙辰', '丁巳', '戊午', '己未', '庚申', '辛酉'];
-function isTouXiu(l, solarYear) {
-  return DA_TOUXIU.includes(l.getDayInGanZhi()) && !isHongSha(l, solarYear) && !isJinShen(l);
+// 煞贡、直星、人专三吉星（金符九星）：按节气月分孟(1,4,7,10)/仲(2,5,8,11)/季(3,6,9,12)月，每项为日干支
+// 已对照 2026 年原数据逐日验证（0 差异）；原表季月 煞贡"己丑"、直星"辛卯"、人专"己亥"按序列规律更正为 乙丑/辛亥/丁亥
+const SANJI = [
+  [ // 孟月
+    '丁卯丙子乙酉甲午癸卯壬子辛酉', '戊辰丁丑丙戌乙未甲辰癸丑壬戌', '辛未庚辰己丑戊戌丁未丙辰'],
+  [ // 仲月
+    '丙寅乙亥甲申癸巳壬寅辛亥庚申', '丁卯丙子乙酉甲午癸卯壬子辛酉', '庚午己卯戊子丁酉丙午乙卯'],
+  [ // 季月
+    '乙丑甲戌癸未壬辰辛丑庚戌己未', '丙寅乙亥甲申癸巳壬寅辛亥庚申', '己巳戊寅丁亥丙申乙巳甲寅癸亥'],
+].map(t => t.join(''));
+// 大偷修日（凶神朝天）：这 8 个干支日
+const DA_TOUXIU = '壬子癸丑丙辰丁巳戊午己未庚申辛酉';
+
+// 吉日 = 三吉星日；其中属大偷修的标"偷修"；红煞日/金神七煞日一律不标
+function dayLabel(l, solarYear) {
+  if (solarYear > HONGSHA_UNTIL_YEAR || isHongSha(l, solarYear) || isJinShen(l)) return '';
+  const m = (ZHI12.indexOf(l.getMonthZhi()) + 10) % 12 + 1;
+  const gz = l.getDayInGanZhi();
+  if (!SANJI[[2, 0, 1][m % 3]].includes(gz)) return '';
+  return DA_TOUXIU.includes(gz) ? '偷修' : '吉';
 }
 
 let calYear = new Date().getFullYear();
@@ -1840,17 +1839,9 @@ function renderCalendar() {
     const chuTag = zhiXing === '除' ? `<div class="tag-chu">${EN ? 'Chú' : '除'}</div>` : '';
 
     // 吉日 / 偷修日标记
-    let jiTag = '';
-    if (calYear === 2026) {
-      const key = `${calMonth + 1}-${i}`;
-      if (JiRi2026[key]) {
-        const label = JiRi2026[key];
-        const dispLabel = EN ? JIRI_EN[label] : label;
-        jiTag = `<div class="tag-ji ${label === '偷修' ? 'tou' : ''}">${dispLabel}</div>`;
-      }
-    } else if (calYear > 2026 && calYear <= HONGSHA_UNTIL_YEAR && isTouXiu(l, calYear)) {
-      jiTag = `<div class="tag-ji tou">${EN ? JIRI_EN['偷修'] : '偷修'}</div>`;
-    }
+    const label = dayLabel(l, calYear);
+    const jiTag = label
+      ? `<div class="tag-ji ${label === '偷修' ? 'tou' : ''}">${EN ? JIRI_EN[label] : label}</div>` : '';
 
     const jsTag = isJinShen(l) ? `<div class="tag-jinshen">${EN ? 'Jinshen' : '金神'}</div>` : '';
     const hsTag = hs ? `<div class="tag-hongsha">${EN ? 'Red Sha' : '红煞'}</div>` : '';
