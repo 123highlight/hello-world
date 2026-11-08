@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0E1222">
+<meta name="theme-color" content="#0E1222" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FBFAF7" media="(prefers-color-scheme: light)">
 <title>般若日历</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lunar-javascript/1.6.12/lunar.min.js"></script>
 <script>if(typeof Lunar === 'undefined') document.write('<script src="https://unpkg.com/lunar-javascript/lunar.js"><\/script>');</script>
@@ -26,6 +27,16 @@
   --wood: #6CC2AF; --fire: #EE9584; --earth: #D9B56C; --metal: #ECE7DA; --water: #86A9E3;
   --serif: 'Noto Serif SC', 'Songti SC', serif;
   --sans: 'Noto Sans SC', 'PingFang SC', system-ui, sans-serif;
+}
+/* 浅色跟随系统：纸白底、墨字，金色加深保证对比度 */
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+    --bg: #FBFAF7; --line: #E6E3DA; --hover: #F1EEE6; --sel: #ECE7DB;
+    --fg: #1D1F2A; --mute: #767A8A;
+    --gold: #9E7420; --good: #2A8571; --bad: #C0503A; --calm: #8A8FA3; --chu: #7A5CB5;
+    --wood: #2A8571; --fire: #C0503A; --earth: #9E7420; --metal: #5E6272; --water: #3567BE;
+  }
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 [hidden] { display: none !important; }
