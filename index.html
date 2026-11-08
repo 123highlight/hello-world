@@ -378,6 +378,8 @@ const DZ_EN = {
   '申':'Shēn (Monkey)','酉':'Yǒu (Rooster)','戌':'Xū (Dog)','亥':'Hài (Pig)'
 };
 const SHICHEN_EN = ['Zǐ','Chǒu','Yín','Mǎo','Chén','Sì','Wǔ','Wèi','Shēn','Yǒu','Xū','Hài'];
+const SHENGXIAO_EN = { '鼠':'Rat','牛':'Ox','虎':'Tiger','兔':'Rabbit','龙':'Dragon','蛇':'Snake',
+  '马':'Horse','羊':'Goat','猴':'Monkey','鸡':'Rooster','狗':'Dog','猪':'Pig' };
 const WUXING_EN = { '木':'Wood','火':'Fire','土':'Earth','金':'Metal','水':'Water' };
 
 function shichenName(idx) {
@@ -389,7 +391,8 @@ function wuxingName(zh) {
 function dirName(zh) {
   if (currentLang === 'zh') return zh;
   const m = { '正北':'N','正南':'S','正东':'E','正西':'W',
-              '东南':'SE','西南':'SW','东北':'NE','西北':'NW','中宫':'Center' };
+              '东南':'SE','西南':'SW','东北':'NE','西北':'NW','中宫':'Center',
+              '北':'N','南':'S','东':'E','西':'W' };
   return m[zh] || zh;
 }
 
@@ -1371,7 +1374,7 @@ function renderDailyDetail(date) {
   const [yiH, jiH] = t('yiJiHead');
   const dirH = t('dirHead');
   const dirs = [mapDir(l.getDayPositionCai()), mapDir(l.getDayPositionXi()), mapDir(l.getDayPositionFu(1)),
-                `${l.getDayChongDesc().replace(/[()]/g, '')} · ${mapDir(l.getDaySha())}`];
+                `${l.getDayChongGan()}${l.getDayChong()}${currentLang === 'en' ? ' ' + SHENGXIAO_EN[l.getDayChongShengXiao()] : l.getDayChongShengXiao()} · ${mapDir(l.getDaySha())}`];
   document.getElementById('day-detail').innerHTML = `
     <div class="row between">
       <span class="serif" style="font-size:17px">${l.getYearInGanZhi()} ${l.getMonthInGanZhi()} ${l.getDayInGanZhi()}</span>
